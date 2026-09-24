@@ -1,9 +1,8 @@
 import { stravaAuthorizeUrl, STATE_COOKIE } from "@/src/lib/strava/auth";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 
-export function GET(request: NextRequest) {
-  const { searchParams } = request.nextUrl;
+export function GET() {
   const state = randomUUID();
   const response = NextResponse.redirect(stravaAuthorizeUrl(state));
 

@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   let token;
   try {
     token = await exchangeCodeForToken(code);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Token exchange failed." },
       { status: 502 },
@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
     athleteId: token.athlete!.id.toString(),
     firstName: token.athlete?.firstname,
     lastName: token.athlete?.lastname,
+    profileMedium: token.athlete?.profile_medium,
     accessToken: token.access_token,
     refreshToken: token.refresh_token,
     expiresAt: token.expires_at,

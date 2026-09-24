@@ -12,6 +12,7 @@ export interface StravaTokenFields {
   athleteId: string;
   firstName?: string;
   lastName?: string;
+  profileMedium?: string;
   accessToken: string;
   refreshToken: string;
   expiresAt: number;
@@ -37,14 +38,19 @@ export async function loginWithStrava(fields: StravaTokenFields): Promise<{
     .where({ provider: PROVIDER_STRAVA, providerAccountId: fields.athleteId })
     .first();
 
-  const userId =
-    existingAccount?.userId ??
-    (
-      await db.orm.public.User.create({
-        firstName: fields.firstName,
-        lastName: fields.lastName,
-      })
-    ).id;
+  const profile = {
+    firstName: fields.firstName,
+    lastName: fields.lastName,
+    profileMedium: fields.profileMedium,
+  };
+
+  let userId: UserId;
+  if (existingAccount) {
+    userId = existingAccount.userId;
+    await db.orm.public.User.where({ id: userId }).update(profile);
+  } else {
+    userId = (await db.orm.public.User.create(profile)).id;
+  }
 
   await db.orm.public.Account.upsert({
     conflictOn: { provider: PROVIDER_STRAVA, providerAccountId: fields.athleteId },
@@ -151,4 +157,10 @@ export async function updateLastSyncedAt(userId: UserId): Promise<void> {
   await db.orm.public.User.where({ id: userId }).update({
     lastSyncedAt: new Date().toISOString(),
   });
+}
+
+export async function getAthleteProfile(userId: UserId) {
+  return db.orm.public.User.select("firstName", "lastName", "profileMedium")
+    .where({ id: userId })
+    .first();
 }

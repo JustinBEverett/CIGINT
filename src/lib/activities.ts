@@ -1,21 +1,33 @@
+import { RDAQA_RETENTION_DAYS } from "@/src/lib/airquality/pm25";
+import { enrichActivitiesWithPm25 } from "@/src/lib/airquality/enrich";
 import { getSession } from "@/src/lib/session";
 import { syncActivities } from "@/src/lib/strava/sync";
 import { getActivitiesForUser, type ActivityRow } from "@/src/prisma/activities";
-import { getLastSyncedAt, updateLastSyncedAt } from "@/src/prisma/users";
+import {
+  getAthleteProfile,
+  getLastSyncedAt,
+  updateLastSyncedAt,
+} from "@/src/prisma/users";
 
 // How long a sync is considered fresh before we bother asking Strava again.
 const SYNC_TTL_SECONDS = 15 * 60;
 
-// How far back the very first sync for a user reaches. Bounded to match
-// the AQ data's lookback window (see Step 3) — no point importing
-// activities older than the air quality data can cover.
-const INITIAL_IMPORT_WINDOW_SECONDS = 30 * 24 * 60 * 60;
+// The first sync only reaches as far back as ECCC still publishes air
+// quality data — older activities couldn't be enriched anyway.
+const INITIAL_IMPORT_WINDOW_SECONDS = RDAQA_RETENTION_DAYS * 24 * 60 * 60;
 
-// The single entry point the app uses to read activities: always reads
-// from our DB, syncing from Strava first only if the cached data is stale.
-export async function getActivities(): Promise<ActivityRow[]> {
+export type AthleteProfile = NonNullable<
+  Awaited<ReturnType<typeof getAthleteProfile>>
+>;
+
+// The single entry point the app uses to read the feed: always reads from
+// our DB, syncing from Strava first only if the cached data is stale.
+export async function getActivityFeed(): Promise<{
+  athlete: AthleteProfile | null;
+  activities: ActivityRow[];
+}> {
   const session = await getSession();
-  if (!session) return [];
+  if (!session) return { athlete: null, activities: [] };
 
   const lastSyncedAt = await getLastSyncedAt(session.userId);
   const lastSyncedAtMs = lastSyncedAt ? new Date(lastSyncedAt).getTime() : null;
@@ -32,5 +44,11 @@ export async function getActivities(): Promise<ActivityRow[]> {
     await updateLastSyncedAt(session.userId);
   }
 
-  return getActivitiesForUser(session.userId);
+  await enrichActivitiesWithPm25(session.userId);
+
+  const [athlete, activities] = await Promise.all([
+    getAthleteProfile(session.userId),
+    getActivitiesForUser(session.userId),
+  ]);
+  return { athlete, activities };
 }

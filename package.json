@@ -19,11 +19,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "@azohra/meteo.grib": "^0.1.4",
+    "@azohra/meteo.j2k": "^0.2.0",
     "@prisma/orm-postgres": "8.0.0-rc.8",
+    "@tailwindcss/postcss": "^4.3.3",
     "next": "16.1.6",
+    "postcss": "^8.5.28",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "strava-v3": "^4.0.1",
+    "tailwindcss": "^4.3.3",
     "temporal-polyfill": "^1.0.4"
   },
   "devDependencies": {
@@ -33,7 +38,7 @@
     "dotenv": "^17.4.2",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
-    "prisma": "latest",
+    "prisma": "8.0.0-rc.13",
     "tsx": "^4.7.1",
     "typescript": "^5.9.3"
   }

@@ -6,6 +6,7 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
       id: field.id.uuidv7String(),
       firstName: field.text().optional(),
       lastName: field.text().optional(),
+      profileMedium: field.text().optional(),
       createdAt: field.temporal.createdAtString(),
       updatedAt: field.temporal.updatedAtString(),
       lastSyncedAt: field.temporal.timestamptzString().optional(),
@@ -60,6 +61,11 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
       startLng: field.float().optional(),
       averageHeartrate: field.float().optional(),
       maxHeartrate: field.float().optional(),
+      // Surface PM2.5 (µg/m³) at the start location/hour. pm25CheckedAt is set
+      // once a lookup gave a definitive answer, so a null pm25 with a
+      // timestamp means "no data available" rather than "not looked up yet".
+      pm25: field.float().optional(),
+      pm25CheckedAt: field.temporal.timestamptzString().optional(),
       createdAt: field.temporal.createdAtString(),
     },
   });

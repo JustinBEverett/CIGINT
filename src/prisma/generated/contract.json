@@ -219,6 +219,20 @@
                   "kind": "scalar"
                 }
               },
+              "pm25": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              },
+              "pm25CheckedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
               "startDate": {
                 "nullable": false,
                 "type": {
@@ -307,6 +321,12 @@
                 },
                 "name": {
                   "column": "name"
+                },
+                "pm25": {
+                  "column": "pm25"
+                },
+                "pm25CheckedAt": {
+                  "column": "pm25CheckedAt"
                 },
                 "startDate": {
                   "column": "startDate"
@@ -454,6 +474,13 @@
                   "kind": "scalar"
                 }
               },
+              "profileMedium": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "updatedAt": {
                 "nullable": false,
                 "type": {
@@ -525,6 +552,9 @@
                 },
                 "lastSyncedAt": {
                   "column": "lastSyncedAt"
+                },
+                "profileMedium": {
+                  "column": "profileMedium"
                 },
                 "updatedAt": {
                   "column": "updatedAt"
@@ -671,6 +701,16 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "pm25": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
+                  "nullable": true
+                },
+                "pm25CheckedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
                 "startDate": {
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
@@ -807,6 +847,11 @@
                   "nativeType": "timestamptz",
                   "nullable": true
                 },
+                "profileMedium": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "updatedAt": {
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
@@ -828,7 +873,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "139aa9508a4f777536d4e4550777bf1e0ef2ca4d022bdcd0725c507821ca686e"
+    "storageHash": "100bfe03a7f36ba9658122cbad5a783c1779ec4acd6141ed1bf076cb081f6097"
   },
   "execution": {
     "executionHash": "3c583bf15a51e33162858ee3e8ddfc9f679f46bdcec6d23add0365a0ad46efc2",
