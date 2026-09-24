@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
   // CSRF check: the `state` we handed to Strava must come back unchanged.
   const expectedState = request.cookies.get(STATE_COOKIE)?.value;
   const state = searchParams.get("state");
-  if (expectedState && state !== expectedState) {
+  if (state !== expectedState) {
     return NextResponse.json(
       { error: "OAuth `state` mismatch." },
       { status: 403 },
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: token.expires_in,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   });
   return response;
 }

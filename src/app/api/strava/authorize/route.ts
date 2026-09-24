@@ -14,6 +14,5 @@ export function GET(request: NextRequest) {
     path: "/",
     maxAge: 60 * 10,
   });
-  console.log(response);
   return response;
 }
