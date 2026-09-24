@@ -2,8 +2,8 @@ export const dynamic = "force-dynamic";
 import { getSession } from "../lib/session";
 
 export default async function Home() {
-  const strava = await getSession();
-  console.log(await strava?.athlete.get());
+  const session = await getSession();
 
-  return <main className="shell"></main>;
+  // Placeholder — real homepage (connect CTA / feed link) lands in Step 4.
+  return <main className="shell">{session ? "Connected" : "Not connected"}</main>;
 }

@@ -33,9 +33,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'139aa9508a4f777536d4e4550777bf1e0ef2ca4d022bdcd0725c507821ca686e'>;
+  StorageHashBase<'320bad349eec0108d242b9b64ac9cc46ed80da0b0ea3b11a8d7223835e2bb495'>;
 export type ExecutionHash =
-  ExecutionHashBase<'3c583bf15a51e33162858ee3e8ddfc9f679f46bdcec6d23add0365a0ad46efc2'>;
+  ExecutionHashBase<'425a8875045a62229f33fb3b23163747c1cc6e3defff4c27f5546ed9a25df9a7'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -241,18 +241,6 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
 
 export type FieldOutputTypes = {
   readonly public: {
-    readonly Account: {
-      readonly id: Char<36>;
-      readonly userId: Char<36>;
-      readonly provider: CodecTypes['pg/text@1']['output'];
-      readonly providerAccountId: CodecTypes['pg/text@1']['output'];
-      readonly accessToken: CodecTypes['pg/text@1']['output'] | null;
-      readonly refreshToken: CodecTypes['pg/text@1']['output'] | null;
-      readonly expiresAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
-      readonly scope: CodecTypes['pg/text@1']['output'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
-    };
     readonly Activity: {
       readonly id: Char<36>;
       readonly userId: Char<36>;
@@ -269,37 +257,24 @@ export type FieldOutputTypes = {
       readonly maxHeartrate: CodecTypes['pg/float8@1']['output'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
-    readonly Session: {
-      readonly id: Char<36>;
-      readonly userId: Char<36>;
-      readonly token: CodecTypes['pg/text@1']['output'];
-      readonly expiresAt: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
-    };
     readonly User: {
       readonly id: Char<36>;
       readonly firstName: CodecTypes['pg/text@1']['output'] | null;
       readonly lastName: CodecTypes['pg/text@1']['output'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly stravaAthleteId: CodecTypes['pg/text@1']['output'] | null;
+      readonly stravaAccessToken: CodecTypes['pg/text@1']['output'] | null;
+      readonly stravaRefreshToken: CodecTypes['pg/text@1']['output'] | null;
+      readonly stravaExpiresAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly stravaScope: CodecTypes['pg/text@1']['output'] | null;
+      readonly sessionId: CodecTypes['pg/text@1']['output'] | null;
       readonly lastSyncedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
     };
   };
 };
 export type FieldInputTypes = {
   readonly public: {
-    readonly Account: {
-      readonly id: CodecTypes['sql/char@1']['input'];
-      readonly userId: CodecTypes['sql/char@1']['input'];
-      readonly provider: CodecTypes['pg/text@1']['input'];
-      readonly providerAccountId: CodecTypes['pg/text@1']['input'];
-      readonly accessToken: CodecTypes['pg/text@1']['input'] | null;
-      readonly refreshToken: CodecTypes['pg/text@1']['input'] | null;
-      readonly expiresAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
-      readonly scope: CodecTypes['pg/text@1']['input'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
-    };
     readonly Activity: {
       readonly id: CodecTypes['sql/char@1']['input'];
       readonly userId: CodecTypes['sql/char@1']['input'];
@@ -316,37 +291,24 @@ export type FieldInputTypes = {
       readonly maxHeartrate: CodecTypes['pg/float8@1']['input'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
-    readonly Session: {
-      readonly id: CodecTypes['sql/char@1']['input'];
-      readonly userId: CodecTypes['sql/char@1']['input'];
-      readonly token: CodecTypes['pg/text@1']['input'];
-      readonly expiresAt: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
-    };
     readonly User: {
       readonly id: CodecTypes['sql/char@1']['input'];
       readonly firstName: CodecTypes['pg/text@1']['input'] | null;
       readonly lastName: CodecTypes['pg/text@1']['input'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly stravaAthleteId: CodecTypes['pg/text@1']['input'] | null;
+      readonly stravaAccessToken: CodecTypes['pg/text@1']['input'] | null;
+      readonly stravaRefreshToken: CodecTypes['pg/text@1']['input'] | null;
+      readonly stravaExpiresAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly stravaScope: CodecTypes['pg/text@1']['input'] | null;
+      readonly sessionId: CodecTypes['pg/text@1']['input'] | null;
       readonly lastSyncedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
     };
   };
 };
 export type StorageColumnTypes = {
   readonly public: {
-    readonly Account: {
-      readonly accessToken: CodecTypes['pg/text@1']['output'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly expiresAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
-      readonly id: Char<36>;
-      readonly provider: CodecTypes['pg/text@1']['output'];
-      readonly providerAccountId: CodecTypes['pg/text@1']['output'];
-      readonly refreshToken: CodecTypes['pg/text@1']['output'] | null;
-      readonly scope: CodecTypes['pg/text@1']['output'] | null;
-      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly userId: Char<36>;
-    };
     readonly Activity: {
       readonly averageHeartrate: CodecTypes['pg/float8@1']['output'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
@@ -363,37 +325,24 @@ export type StorageColumnTypes = {
       readonly type: CodecTypes['pg/text@1']['output'];
       readonly userId: Char<36>;
     };
-    readonly Session: {
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly expiresAt: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly id: Char<36>;
-      readonly token: CodecTypes['pg/text@1']['output'];
-      readonly userId: Char<36>;
-    };
     readonly User: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly firstName: CodecTypes['pg/text@1']['output'] | null;
       readonly id: Char<36>;
       readonly lastName: CodecTypes['pg/text@1']['output'] | null;
       readonly lastSyncedAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly sessionId: CodecTypes['pg/text@1']['output'] | null;
+      readonly stravaAccessToken: CodecTypes['pg/text@1']['output'] | null;
+      readonly stravaAthleteId: CodecTypes['pg/text@1']['output'] | null;
+      readonly stravaExpiresAt: CodecTypes['pg/timestamptz-string@1']['output'] | null;
+      readonly stravaRefreshToken: CodecTypes['pg/text@1']['output'] | null;
+      readonly stravaScope: CodecTypes['pg/text@1']['output'] | null;
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
     };
   };
 };
 export type StorageColumnInputTypes = {
   readonly public: {
-    readonly Account: {
-      readonly accessToken: CodecTypes['pg/text@1']['input'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly expiresAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
-      readonly id: CodecTypes['sql/char@1']['input'];
-      readonly provider: CodecTypes['pg/text@1']['input'];
-      readonly providerAccountId: CodecTypes['pg/text@1']['input'];
-      readonly refreshToken: CodecTypes['pg/text@1']['input'] | null;
-      readonly scope: CodecTypes['pg/text@1']['input'] | null;
-      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly userId: CodecTypes['sql/char@1']['input'];
-    };
     readonly Activity: {
       readonly averageHeartrate: CodecTypes['pg/float8@1']['input'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
@@ -410,19 +359,18 @@ export type StorageColumnInputTypes = {
       readonly type: CodecTypes['pg/text@1']['input'];
       readonly userId: CodecTypes['sql/char@1']['input'];
     };
-    readonly Session: {
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly expiresAt: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly id: CodecTypes['sql/char@1']['input'];
-      readonly token: CodecTypes['pg/text@1']['input'];
-      readonly userId: CodecTypes['sql/char@1']['input'];
-    };
     readonly User: {
       readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly firstName: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['sql/char@1']['input'];
       readonly lastName: CodecTypes['pg/text@1']['input'] | null;
       readonly lastSyncedAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly sessionId: CodecTypes['pg/text@1']['input'] | null;
+      readonly stravaAccessToken: CodecTypes['pg/text@1']['input'] | null;
+      readonly stravaAthleteId: CodecTypes['pg/text@1']['input'] | null;
+      readonly stravaExpiresAt: CodecTypes['pg/timestamptz-string@1']['input'] | null;
+      readonly stravaRefreshToken: CodecTypes['pg/text@1']['input'] | null;
+      readonly stravaScope: CodecTypes['pg/text@1']['input'] | null;
       readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
     };
   };
@@ -445,67 +393,6 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
-            readonly Account: {
-              columns: {
-                readonly id: {
-                  readonly nativeType: 'character';
-                  readonly codecId: 'sql/char@1';
-                  readonly nullable: false;
-                  readonly typeParams: { readonly length: 36 };
-                };
-                readonly userId: {
-                  readonly nativeType: 'character';
-                  readonly codecId: 'sql/char@1';
-                  readonly nullable: false;
-                  readonly typeParams: { readonly length: 36 };
-                };
-                readonly provider: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly providerAccountId: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly accessToken: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-                readonly refreshToken: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-                readonly expiresAt: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                  readonly nullable: true;
-                };
-                readonly scope: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
-                };
-                readonly createdAt: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                  readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                };
-                readonly updatedAt: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                  readonly nullable: false;
-                };
-              };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['provider', 'providerAccountId'] }];
-              indexes: readonly [];
-              foreignKeys: readonly [];
-            };
             readonly Activity: {
               columns: {
                 readonly id: {
@@ -587,42 +474,6 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly Session: {
-              columns: {
-                readonly id: {
-                  readonly nativeType: 'character';
-                  readonly codecId: 'sql/char@1';
-                  readonly nullable: false;
-                  readonly typeParams: { readonly length: 36 };
-                };
-                readonly userId: {
-                  readonly nativeType: 'character';
-                  readonly codecId: 'sql/char@1';
-                  readonly nullable: false;
-                  readonly typeParams: { readonly length: 36 };
-                };
-                readonly token: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
-                readonly expiresAt: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                  readonly nullable: false;
-                };
-                readonly createdAt: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                  readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                };
-              };
-              primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [{ readonly columns: readonly ['token'] }];
-              indexes: readonly [];
-              foreignKeys: readonly [];
-            };
             readonly User: {
               columns: {
                 readonly id: {
@@ -652,6 +503,36 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                 };
+                readonly stravaAthleteId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly stravaAccessToken: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly stravaRefreshToken: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly stravaExpiresAt: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly nullable: true;
+                };
+                readonly stravaScope: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly sessionId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
                 readonly lastSyncedAt: {
                   readonly nativeType: 'timestamptz';
                   readonly codecId: 'pg/timestamptz-string@1';
@@ -659,7 +540,10 @@ type ContractBase = Omit<
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
-              uniques: readonly [];
+              uniques: readonly [
+                { readonly columns: readonly ['stravaAthleteId'] },
+                { readonly columns: readonly ['sessionId'] },
+              ];
               indexes: readonly [];
               foreignKeys: readonly [];
             };
@@ -676,100 +560,11 @@ type ContractBase = Omit<
   readonly roots: {
     readonly User: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
     readonly Activity: { readonly namespace: 'public' & NamespaceId; readonly model: 'Activity' };
-    readonly Account: { readonly namespace: 'public' & NamespaceId; readonly model: 'Account' };
-    readonly Session: { readonly namespace: 'public' & NamespaceId; readonly model: 'Session' };
   };
   readonly domain: {
     readonly namespaces: {
       readonly public: {
         readonly models: {
-          readonly Account: {
-            readonly fields: {
-              readonly id: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/char@1';
-                  readonly typeParams: { readonly length: 36 };
-                };
-              };
-              readonly userId: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/char@1';
-                  readonly typeParams: { readonly length: 36 };
-                };
-              };
-              readonly provider: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly providerAccountId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly accessToken: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly refreshToken: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly expiresAt: {
-                readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
-              };
-              readonly scope: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly createdAt: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
-              };
-              readonly updatedAt: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
-              };
-            };
-            readonly relations: {
-              readonly user: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
-                readonly cardinality: 'N:1';
-                readonly on: {
-                  readonly localFields: readonly ['userId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-            };
-            readonly storage: {
-              readonly table: 'Account';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly id: { readonly column: 'id' };
-                readonly userId: { readonly column: 'userId' };
-                readonly provider: { readonly column: 'provider' };
-                readonly providerAccountId: { readonly column: 'providerAccountId' };
-                readonly accessToken: { readonly column: 'accessToken' };
-                readonly refreshToken: { readonly column: 'refreshToken' };
-                readonly expiresAt: { readonly column: 'expiresAt' };
-                readonly scope: { readonly column: 'scope' };
-                readonly createdAt: { readonly column: 'createdAt' };
-                readonly updatedAt: { readonly column: 'updatedAt' };
-              };
-            };
-          };
           readonly Activity: {
             readonly fields: {
               readonly id: {
@@ -874,65 +669,6 @@ type ContractBase = Omit<
               };
             };
           };
-          readonly Session: {
-            readonly fields: {
-              readonly id: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/char@1';
-                  readonly typeParams: { readonly length: 36 };
-                };
-              };
-              readonly userId: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'sql/char@1';
-                  readonly typeParams: { readonly length: 36 };
-                };
-              };
-              readonly token: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly expiresAt: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
-              };
-              readonly createdAt: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
-                };
-              };
-            };
-            readonly relations: {
-              readonly user: {
-                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
-                readonly cardinality: 'N:1';
-                readonly on: {
-                  readonly localFields: readonly ['userId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-            };
-            readonly storage: {
-              readonly table: 'Session';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly id: { readonly column: 'id' };
-                readonly userId: { readonly column: 'userId' };
-                readonly token: { readonly column: 'token' };
-                readonly expiresAt: { readonly column: 'expiresAt' };
-                readonly createdAt: { readonly column: 'createdAt' };
-              };
-            };
-          };
           readonly User: {
             readonly fields: {
               readonly id: {
@@ -965,6 +701,33 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-string@1';
                 };
               };
+              readonly stravaAthleteId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly stravaAccessToken: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly stravaRefreshToken: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly stravaExpiresAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-string@1';
+                };
+              };
+              readonly stravaScope: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly sessionId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly lastSyncedAt: {
                 readonly nullable: true;
                 readonly type: {
@@ -985,28 +748,6 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['userId'];
                 };
               };
-              readonly accounts: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Account';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['userId'];
-                };
-              };
-              readonly sessions: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Session';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['userId'];
-                };
-              };
             };
             readonly storage: {
               readonly table: 'User';
@@ -1017,6 +758,12 @@ type ContractBase = Omit<
                 readonly lastName: { readonly column: 'lastName' };
                 readonly createdAt: { readonly column: 'createdAt' };
                 readonly updatedAt: { readonly column: 'updatedAt' };
+                readonly stravaAthleteId: { readonly column: 'stravaAthleteId' };
+                readonly stravaAccessToken: { readonly column: 'stravaAccessToken' };
+                readonly stravaRefreshToken: { readonly column: 'stravaRefreshToken' };
+                readonly stravaExpiresAt: { readonly column: 'stravaExpiresAt' };
+                readonly stravaScope: { readonly column: 'stravaScope' };
+                readonly sessionId: { readonly column: 'sessionId' };
                 readonly lastSyncedAt: { readonly column: 'lastSyncedAt' };
               };
             };
@@ -1051,32 +798,7 @@ type ContractBase = Omit<
         {
           readonly ref: {
             readonly namespace: 'public';
-            readonly table: 'Account';
-            readonly column: 'id';
-          };
-          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv7' };
-        },
-        {
-          readonly ref: {
-            readonly namespace: 'public';
-            readonly table: 'Account';
-            readonly column: 'updatedAt';
-          };
-          readonly onCreate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
-          readonly onUpdate: { readonly kind: 'generator'; readonly id: 'timestampNow' };
-        },
-        {
-          readonly ref: {
-            readonly namespace: 'public';
             readonly table: 'Activity';
-            readonly column: 'id';
-          };
-          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv7' };
-        },
-        {
-          readonly ref: {
-            readonly namespace: 'public';
-            readonly table: 'Session';
             readonly column: 'id';
           };
           readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv7' };

@@ -1,8 +1,7 @@
 import { exchangeCodeForToken, STATE_COOKIE } from "@/src/lib/strava/auth";
-import { SESSION_COOKIE } from "@/src/lib/session";
-import { saveStravaToken, StravaTokenFields } from "@/src/prisma/users";
+import { SESSION_COOKIE } from "@/src/lib/constants";
+import { loginWithStrava, type StravaTokenFields } from "@/src/prisma/users";
 import { NextRequest, NextResponse } from "next/server";
-import { randomUUID } from "node:crypto";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -27,8 +26,6 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const scope = searchParams.get("scope");
-
   let token;
   try {
     token = await exchangeCodeForToken(code);
@@ -49,19 +46,18 @@ export async function GET(request: NextRequest) {
     scope: token.scope,
   };
 
-  const sessionId = randomUUID().toString();
-  await saveStravaToken(fields, sessionId);
+  const { sessionToken } = await loginWithStrava(fields);
 
   const response = NextResponse.redirect(
-    new URL("/", process.env.APP_ORIGIN),
+    new URL("/activities", process.env.APP_ORIGIN),
     303,
   );
-  response.cookies.set(SESSION_COOKIE, sessionId, {
+  response.cookies.set(SESSION_COOKIE, sessionToken, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60, // 30 days — matches the Session row's own expiresAt
   });
   return response;
 }

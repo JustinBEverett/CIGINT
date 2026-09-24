@@ -1,10 +1,6 @@
 import strava from "strava-v3";
 import type { RefreshTokenResponse, SummaryAthlete } from "strava-v3";
-import {
-  saveStravaToken,
-  updateStravaToken,
-  type StravaTokenFields,
-} from "../../prisma/users";
+import { updateStravaToken, type UserId } from "../../prisma/users";
 
 export type InitialTokenResponse = {
   athlete: SummaryAthlete;
@@ -66,12 +62,11 @@ export function getStravaClientFromToken(token: string) {
 
 export async function refreshStravaCredentials(
   refreshToken: string,
-  sessionId: string,
+  userId: UserId,
 ) {
   configureStrava();
   const { access_token, refresh_token, expires_at } =
     await strava.oauth.refreshToken(refreshToken);
 
-  await updateStravaToken(access_token, refresh_token, expires_at, sessionId);
-  return;
+  await updateStravaToken(userId, access_token, refresh_token, expires_at);
 }

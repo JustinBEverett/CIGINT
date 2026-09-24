@@ -1,6 +1,12 @@
+import { randomUUID } from "node:crypto";
 import { db } from "./db.ts";
 
-export { db };
+export type UserId = NonNullable<
+  Awaited<ReturnType<typeof db.orm.public.User.first>>
+>["id"];
+
+const SESSION_LIFETIME_SECONDS = 30 * 24 * 60 * 60;
+const PROVIDER_STRAVA = "strava";
 
 export interface StravaTokenFields {
   athleteId: string;
@@ -11,84 +17,138 @@ export interface StravaTokenFields {
   expiresAt: number;
   scope: string;
 }
+
 export interface StravaCredentials {
-  athleteId: string;
   accessToken: string;
   refreshToken: string;
   expiresAt: string;
 }
 
-export async function saveStravaToken(
-  fields: StravaTokenFields,
-  sessionId: string,
-) {
+// Links (or creates) the User behind a Strava account, upserts that
+// account's tokens, and opens a new session for it. One call covers both
+// first-time login and reconnecting an already-linked account.
+export async function loginWithStrava(fields: StravaTokenFields): Promise<{
+  userId: UserId;
+  sessionToken: string;
+}> {
   const expiresAtIso = new Date(fields.expiresAt * 1000).toISOString();
 
-  return db.orm.public.User.upsert({
-    conflictOn: { stravaAthleteId: fields.athleteId },
+  const existingAccount = await db.orm.public.Account.select("userId")
+    .where({ provider: PROVIDER_STRAVA, providerAccountId: fields.athleteId })
+    .first();
+
+  const userId =
+    existingAccount?.userId ??
+    (
+      await db.orm.public.User.create({
+        firstName: fields.firstName,
+        lastName: fields.lastName,
+      })
+    ).id;
+
+  await db.orm.public.Account.upsert({
+    conflictOn: { provider: PROVIDER_STRAVA, providerAccountId: fields.athleteId },
     create: {
-      stravaAthleteId: fields.athleteId,
-      firstName: fields.firstName,
-      lastName: fields.lastName,
-      stravaAccessToken: fields.accessToken,
-      stravaRefreshToken: fields.refreshToken,
-      stravaExpiresAt: expiresAtIso,
-      stravaScope: fields.scope,
-      sessionId: sessionId,
+      userId,
+      provider: PROVIDER_STRAVA,
+      providerAccountId: fields.athleteId,
+      accessToken: fields.accessToken,
+      refreshToken: fields.refreshToken,
+      expiresAt: expiresAtIso,
+      scope: fields.scope,
     },
     update: {
-      stravaAccessToken: fields.accessToken,
-      stravaRefreshToken: fields.refreshToken,
-      stravaExpiresAt: expiresAtIso,
-      sessionId: sessionId,
-      ...(fields.scope != null ? { stravaScope: fields.scope } : {}),
-      ...(fields.firstName != null ? { firstName: fields.firstName } : {}),
-      ...(fields.lastName != null ? { lastName: fields.lastName } : {}),
+      accessToken: fields.accessToken,
+      refreshToken: fields.refreshToken,
+      expiresAt: expiresAtIso,
+      scope: fields.scope,
     },
   });
+
+  const sessionToken = await createSession(userId);
+  return { userId, sessionToken };
 }
 
-export async function updateStravaToken(
-  accessToken: string,
-  refreshToken: string,
-  expiresAt: number,
-  sessionId: string,
-) {
-  const expiresAtIso = new Date(expiresAt * 1000).toISOString();
+async function createSession(userId: UserId): Promise<string> {
+  const token = randomUUID();
+  const expiresAt = new Date(
+    Date.now() + SESSION_LIFETIME_SECONDS * 1000,
+  ).toISOString();
 
-  return db.orm.public.User.where({ sessionId: sessionId }).update({
-    stravaAccessToken: accessToken,
-    stravaRefreshToken: refreshToken,
-    stravaExpiresAt: expiresAtIso,
-  });
+  await db.orm.public.Session.create({ userId, token, expiresAt });
+  return token;
+}
+
+// Resolves a session cookie's token to the user it belongs to, or null if
+// the token is unknown or has expired.
+export async function getUserIdForSessionToken(
+  token: string,
+): Promise<UserId | null> {
+  const session = await db.orm.public.Session.select("userId", "expiresAt")
+    .where({ token })
+    .first();
+
+  if (!session || new Date(session.expiresAt).valueOf() < Date.now()) {
+    return null;
+  }
+
+  return session.userId;
 }
 
 export async function getStravaCredentials(
-  sessionId: string,
+  userId: UserId,
 ): Promise<StravaCredentials | null> {
-  const row = await db.orm.public.User.select(
-    "stravaAccessToken",
-    "stravaRefreshToken",
-    "stravaExpiresAt",
-    "stravaAthleteId",
+  const account = await db.orm.public.Account.select(
+    "accessToken",
+    "refreshToken",
+    "expiresAt",
   )
-    .where({ sessionId: sessionId })
+    .where({ userId, provider: PROVIDER_STRAVA })
     .first();
 
   if (
-    !row ||
-    row.stravaAccessToken == null ||
-    row.stravaRefreshToken == null ||
-    row.stravaExpiresAt == null ||
-    row.stravaAthleteId == null
+    !account ||
+    account.accessToken == null ||
+    account.refreshToken == null ||
+    account.expiresAt == null
   ) {
     return null;
   }
 
   return {
-    athleteId: row.stravaAthleteId,
-    accessToken: row.stravaAccessToken,
-    refreshToken: row.stravaRefreshToken,
-    expiresAt: row.stravaExpiresAt,
+    accessToken: account.accessToken,
+    refreshToken: account.refreshToken,
+    expiresAt: account.expiresAt,
   };
+}
+
+export async function updateStravaToken(
+  userId: UserId,
+  accessToken: string,
+  refreshToken: string,
+  expiresAt: number,
+): Promise<void> {
+  const expiresAtIso = new Date(expiresAt * 1000).toISOString();
+
+  await db.orm.public.Account.where({
+    userId,
+    provider: PROVIDER_STRAVA,
+  }).update({
+    accessToken,
+    refreshToken,
+    expiresAt: expiresAtIso,
+  });
+}
+
+export async function getLastSyncedAt(userId: UserId): Promise<string | null> {
+  const row = await db.orm.public.User.select("lastSyncedAt")
+    .where({ id: userId })
+    .first();
+  return row?.lastSyncedAt ?? null;
+}
+
+export async function updateLastSyncedAt(userId: UserId): Promise<void> {
+  await db.orm.public.User.where({ id: userId }).update({
+    lastSyncedAt: new Date().toISOString(),
+  });
 }
