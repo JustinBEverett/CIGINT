@@ -2,10 +2,5 @@ node_modules/
 dist/
 .env
 tsconfig.tsbuildinfo
-/.alchemy
-/.prisma-composer
-/.agents
-/.claude
-/.cursor
-/.devin
 /.next
+.vercel

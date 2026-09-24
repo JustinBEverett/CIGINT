@@ -6,7 +6,16 @@ import { SESSION_COOKIE } from "@/src/lib/constants";
 // page, at which point "/" moves into this list.
 const PUBLIC_PATHS = ["/api/strava/authorize", "/api/strava/callback"];
 
+// Mirrors the dev bypass in lib/session.ts — never active once NODE_ENV
+// is production, regardless of what DEV_USER_ID is set to.
+const DEV_BYPASS_ACTIVE =
+  process.env.NODE_ENV !== "production" && !!process.env.DEV_USER_ID;
+
 export function proxy(request: NextRequest) {
+  if (DEV_BYPASS_ACTIVE) {
+    return NextResponse.next();
+  }
+
   const { pathname } = request.nextUrl;
 
   if (PUBLIC_PATHS.some((path) => pathname.startsWith(path))) {
