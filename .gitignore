@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .env
+tsconfig.tsbuildinfo
 /.alchemy
 /.prisma-composer
 /.agents

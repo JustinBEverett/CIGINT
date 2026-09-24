@@ -1,0 +1,13 @@
+diff --git a/index.d.ts b/index.d.ts
+index e5930238d11d117660025154e77c2e48aaf3b0f4..2ae392208cf92355b1c8c6edb64075adee5f7e55 100644
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -837,7 +837,7 @@ export interface AthleteRoutes {
+ export interface GetRequestAccessURLArgs {
+   scope?: string;
+   state?: string;
+-  approval_prompt?: "prompt" | "auto";
++  approval_prompt?: "prompt" | "auto" | "force";
+ }
+ 
+ /** Minimal response from the deauthorize endpoint (success or error). */

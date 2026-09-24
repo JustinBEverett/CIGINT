@@ -1,35 +1,48 @@
-import { defineContract } from '@prisma/orm-postgres/contract-builder';
+import { defineContract } from "@prisma/orm-postgres/contract-builder";
 
 export const contract = defineContract({}, ({ field, model, rel }) => {
-  const User = model('User', {
+  const User = model("User", {
     fields: {
       id: field.id.uuidv7String(),
-      email: field.text().unique(),
-      username: field.text().optional(),
-      name: field.text().optional(),
+      firstName: field.text().optional(),
+      lastName: field.text().optional(),
       createdAt: field.temporal.createdAtString(),
       updatedAt: field.temporal.updatedAtString(),
+      stravaAthleteId: field.text().optional().unique(),
+      stravaAccessToken: field.text().optional(),
+      stravaRefreshToken: field.text().optional(),
+      stravaExpiresAt: field.temporal.timestamptzString().optional(),
+      stravaScope: field.text().optional(),
+      sessionId: field.text().unique().optional(),
     },
   });
 
-  const Post = model('Post', {
+  const Activity = model("Activity", {
     fields: {
       id: field.id.uuidv7String(),
-      title: field.text(),
-      content: field.text().optional(),
-      authorId: field.uuidString(),
+      userId: field.uuidString(),
+      stravaActivityId: field.text().unique(),
+      name: field.text(),
+      type: field.text(),
+      startDate: field.temporal.timestamptzString(),
+      movingTime: field.int(),
+      elapsedTime: field.int(),
+      distance: field.float(),
+      startLat: field.float().optional(),
+      startLng: field.float().optional(),
+      averageHeartrate: field.float().optional(),
+      maxHeartrate: field.float().optional(),
       createdAt: field.temporal.createdAtString(),
-      updatedAt: field.temporal.updatedAtString(),
     },
   });
 
   return {
     models: {
       User: User.relations({
-        posts: rel.hasMany(Post, { by: 'authorId' }),
+        activities: rel.hasMany(Activity, { by: "userId" }),
       }),
-      Post: Post.relations({
-        author: rel.belongsTo(User, { from: 'authorId', to: 'id' }),
+      Activity: Activity.relations({
+        user: rel.belongsTo(User, { from: "userId", to: "id" }),
       }),
     },
   };

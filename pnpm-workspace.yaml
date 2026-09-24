@@ -8,3 +8,5 @@ minimumReleaseAgeExclude:
   - "@prisma/*"
 overrides:
   effect: "4.0.0-rc.112"
+patchedDependencies:
+  strava-v3: patches/strava-v3.patch

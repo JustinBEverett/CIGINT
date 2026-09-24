@@ -4,8 +4,8 @@
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
   "roots": {
-    "Post": {
-      "model": "Post",
+    "Activity": {
+      "model": "Activity",
       "namespace": "public"
     },
     "User": {
@@ -17,22 +17,12 @@
     "namespaces": {
       "public": {
         "models": {
-          "Post": {
+          "Activity": {
             "fields": {
-              "authorId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "sql/char@1",
-                  "kind": "scalar",
-                  "typeParams": {
-                    "length": 36
-                  }
-                }
-              },
-              "content": {
+              "averageHeartrate": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/text@1",
+                  "codecId": "pg/float8@1",
                   "kind": "scalar"
                 }
               },
@@ -40,6 +30,20 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "distance": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              },
+              "elapsedTime": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               },
@@ -53,27 +57,79 @@
                   }
                 }
               },
-              "title": {
+              "maxHeartrate": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              },
+              "movingTime": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
-              "updatedAt": {
+              "startDate": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
+              },
+              "startLat": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              },
+              "startLng": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/float8@1",
+                  "kind": "scalar"
+                }
+              },
+              "stravaActivityId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "type": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "sql/char@1",
+                  "kind": "scalar",
+                  "typeParams": {
+                    "length": 36
+                  }
+                }
               }
             },
             "relations": {
-              "author": {
+              "user": {
                 "cardinality": "N:1",
                 "on": {
                   "localFields": [
-                    "authorId"
+                    "userId"
                   ],
                   "targetFields": [
                     "id"
@@ -87,27 +143,51 @@
             },
             "storage": {
               "fields": {
-                "authorId": {
-                  "column": "authorId"
-                },
-                "content": {
-                  "column": "content"
+                "averageHeartrate": {
+                  "column": "averageHeartrate"
                 },
                 "createdAt": {
                   "column": "createdAt"
                 },
+                "distance": {
+                  "column": "distance"
+                },
+                "elapsedTime": {
+                  "column": "elapsedTime"
+                },
                 "id": {
                   "column": "id"
                 },
-                "title": {
-                  "column": "title"
+                "maxHeartrate": {
+                  "column": "maxHeartrate"
                 },
-                "updatedAt": {
-                  "column": "updatedAt"
+                "movingTime": {
+                  "column": "movingTime"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "startDate": {
+                  "column": "startDate"
+                },
+                "startLat": {
+                  "column": "startLat"
+                },
+                "startLng": {
+                  "column": "startLng"
+                },
+                "stravaActivityId": {
+                  "column": "stravaActivityId"
+                },
+                "type": {
+                  "column": "type"
+                },
+                "userId": {
+                  "column": "userId"
                 }
               },
               "namespaceId": "public",
-              "table": "Post"
+              "table": "Activity"
             }
           },
           "User": {
@@ -119,8 +199,8 @@
                   "kind": "scalar"
                 }
               },
-              "email": {
-                "nullable": false,
+              "firstName": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -136,7 +216,49 @@
                   }
                 }
               },
-              "name": {
+              "lastName": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "sessionId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "stravaAccessToken": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "stravaAthleteId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "stravaExpiresAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "stravaRefreshToken": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "stravaScope": {
                 "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
@@ -149,28 +271,21 @@
                   "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
-              },
-              "username": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
               }
             },
             "relations": {
-              "posts": {
+              "activities": {
                 "cardinality": "1:N",
                 "on": {
                   "localFields": [
                     "id"
                   ],
                   "targetFields": [
-                    "authorId"
+                    "userId"
                   ]
                 },
                 "to": {
-                  "model": "Post",
+                  "model": "Activity",
                   "namespace": "public"
                 }
               }
@@ -180,20 +295,35 @@
                 "createdAt": {
                   "column": "createdAt"
                 },
-                "email": {
-                  "column": "email"
+                "firstName": {
+                  "column": "firstName"
                 },
                 "id": {
                   "column": "id"
                 },
-                "name": {
-                  "column": "name"
+                "lastName": {
+                  "column": "lastName"
+                },
+                "sessionId": {
+                  "column": "sessionId"
+                },
+                "stravaAccessToken": {
+                  "column": "stravaAccessToken"
+                },
+                "stravaAthleteId": {
+                  "column": "stravaAthleteId"
+                },
+                "stravaExpiresAt": {
+                  "column": "stravaExpiresAt"
+                },
+                "stravaRefreshToken": {
+                  "column": "stravaRefreshToken"
+                },
+                "stravaScope": {
+                  "column": "stravaScope"
                 },
                 "updatedAt": {
                   "column": "updatedAt"
-                },
-                "username": {
-                  "column": "username"
                 }
               },
               "namespaceId": "public",
@@ -209,19 +339,11 @@
       "public": {
         "entries": {
           "table": {
-            "Post": {
+            "Activity": {
               "columns": {
-                "authorId": {
-                  "codecId": "sql/char@1",
-                  "nativeType": "character",
-                  "nullable": false,
-                  "typeParams": {
-                    "length": 36
-                  }
-                },
-                "content": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
+                "averageHeartrate": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
                   "nullable": true
                 },
                 "createdAt": {
@@ -233,48 +355,14 @@
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
-                "id": {
-                  "codecId": "sql/char@1",
-                  "nativeType": "character",
-                  "nullable": false,
-                  "typeParams": {
-                    "length": 36
-                  }
-                },
-                "title": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
+                "distance": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
                   "nullable": false
                 },
-                "updatedAt": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
-                  "nullable": false
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ]
-              },
-              "uniques": []
-            },
-            "User": {
-              "columns": {
-                "createdAt": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nativeType": "timestamptz",
-                  "nullable": false
-                },
-                "email": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
+                "elapsedTime": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
                   "nullable": false
                 },
                 "id": {
@@ -284,21 +372,54 @@
                   "typeParams": {
                     "length": 36
                   }
+                },
+                "maxHeartrate": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
+                  "nullable": true
+                },
+                "movingTime": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
                 },
                 "name": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": true
+                  "nullable": false
                 },
-                "updatedAt": {
+                "startDate": {
                   "codecId": "pg/timestamptz-string@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
-                "username": {
+                "startLat": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
+                  "nullable": true
+                },
+                "startLng": {
+                  "codecId": "pg/float8@1",
+                  "nativeType": "float8",
+                  "nullable": true
+                },
+                "stravaActivityId": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": true
+                  "nullable": false
+                },
+                "type": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "userId": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
                 }
               },
               "foreignKeys": [],
@@ -311,7 +432,92 @@
               "uniques": [
                 {
                   "columns": [
-                    "email"
+                    "stravaActivityId"
+                  ]
+                }
+              ]
+            },
+            "User": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "firstName": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "id": {
+                  "codecId": "sql/char@1",
+                  "nativeType": "character",
+                  "nullable": false,
+                  "typeParams": {
+                    "length": 36
+                  }
+                },
+                "lastName": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "sessionId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "stravaAccessToken": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "stravaAthleteId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "stravaExpiresAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "stravaRefreshToken": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "stravaScope": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "updatedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "stravaAthleteId"
+                  ]
+                },
+                {
+                  "columns": [
+                    "sessionId"
                   ]
                 }
               ]
@@ -322,10 +528,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "bd6cd4febdccf911cbc0230a0ee66d1eeb16a0f11a9a95931dbe32fc35a3feeb"
+    "storageHash": "5c3384859559f78ec1b7a3dc75f9add8d9dfee7d89333df1156d2bff8b0bd67a"
   },
   "execution": {
-    "executionHash": "fded2d39ac902307abfa1d94180d6742a85b04ee38d7795237e17f66b04315ae",
+    "executionHash": "425a8875045a62229f33fb3b23163747c1cc6e3defff4c27f5546ed9a25df9a7",
     "mutations": {
       "defaults": [
         {
@@ -336,22 +542,7 @@
           "ref": {
             "column": "id",
             "namespace": "public",
-            "table": "Post"
-          }
-        },
-        {
-          "onCreate": {
-            "id": "timestampNow",
-            "kind": "generator"
-          },
-          "onUpdate": {
-            "id": "timestampNow",
-            "kind": "generator"
-          },
-          "ref": {
-            "column": "updatedAt",
-            "namespace": "public",
-            "table": "Post"
+            "table": "Activity"
           }
         },
         {
