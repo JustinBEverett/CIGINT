@@ -11,12 +11,13 @@
     "db:update": "prisma db update",
     "db:verify": "prisma db verify",
     "dev": "next dev -p 3000",
-    "lint": "eslint",
+    "lint": "eslint src \"*.{ts,mjs}\"",
     "migrate": "prisma db migrate",
     "migration:plan": "prisma migration plan",
     "migration:show": "prisma migration show",
     "migration:status": "prisma migration status",
-    "start": "next start"
+    "start": "next start",
+    "test": "vitest run"
   },
   "dependencies": {
     "@azohra/meteo.grib": "^0.1.4",
@@ -40,6 +41,7 @@
     "eslint-config-next": "16.1.6",
     "prisma": "8.0.0-rc.13",
     "tsx": "^4.7.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
   }
 }
