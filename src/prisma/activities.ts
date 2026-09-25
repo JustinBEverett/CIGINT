@@ -14,27 +14,6 @@ export async function getActivitiesForUser(
     .all();
 }
 
-export async function getActivitiesNeedingPm25(
-  userId: UserId,
-  limit: number,
-): Promise<ActivityRow[]> {
-  return db.orm.public.Activity.where({ userId })
-    .where((a) => a.pm25CheckedAt.isNull())
-    .orderBy((a) => a.startDate.desc())
-    .limit(limit)
-    .all();
-}
-
-export async function setActivityPm25(
-  id: ActivityRow["id"],
-  pm25: number | null,
-): Promise<void> {
-  await db.orm.public.Activity.where({ id }).update({
-    pm25,
-    pm25CheckedAt: new Date().toISOString(),
-  });
-}
-
 // Strava's HR fields aren't declared on this package's SummaryActivity type
 // even though the real API returns them (present only when the athlete
 // recorded heart rate).

@@ -1,8 +1,11 @@
-import { RDAQA_RETENTION_DAYS } from "@/src/lib/airquality/pm25";
-import { enrichActivitiesWithPm25 } from "@/src/lib/airquality/enrich";
+import { RDAQA_RETENTION_DAYS, RDAQA_SOURCE } from "@/src/lib/airquality/rdaqa";
 import { getSession } from "@/src/lib/session";
 import { syncActivities } from "@/src/lib/strava/sync";
 import { getActivitiesForUser, type ActivityRow } from "@/src/prisma/activities";
+import {
+  getAirQualityByActivity,
+  type AirQualityRow,
+} from "@/src/prisma/airquality";
 import {
   getAthleteProfile,
   getLastSyncedAt,
@@ -13,21 +16,28 @@ import {
 const SYNC_TTL_SECONDS = 15 * 60;
 
 // The first sync only reaches as far back as ECCC still publishes air
-// quality data — older activities couldn't be enriched anyway.
+// quality data — older activities couldn't be looked up anyway.
 const INITIAL_IMPORT_WINDOW_SECONDS = RDAQA_RETENTION_DAYS * 24 * 60 * 60;
 
 export type AthleteProfile = NonNullable<
   Awaited<ReturnType<typeof getAthleteProfile>>
 >;
 
-// The single entry point the app uses to read the feed: always reads from
-// our DB, syncing from Strava first only if the cached data is stale.
-export async function getActivityFeed(): Promise<{
+export interface ActivityFeed {
   athlete: AthleteProfile | null;
   activities: ActivityRow[];
-}> {
+  // Whatever is already stored; missing or improvable readings are filled in
+  // while the page streams (see ensureAirQuality).
+  airQuality: Map<ActivityRow["id"], AirQualityRow>;
+}
+
+// The single entry point the app uses to read the feed: always reads from
+// our DB, syncing from Strava first only if the cached data is stale.
+export async function getActivityFeed(): Promise<ActivityFeed> {
   const session = await getSession();
-  if (!session) return { athlete: null, activities: [] };
+  if (!session) {
+    return { athlete: null, activities: [], airQuality: new Map() };
+  }
 
   const lastSyncedAt = await getLastSyncedAt(session.userId);
   const lastSyncedAtMs = lastSyncedAt ? new Date(lastSyncedAt).getTime() : null;
@@ -44,11 +54,14 @@ export async function getActivityFeed(): Promise<{
     await updateLastSyncedAt(session.userId);
   }
 
-  await enrichActivitiesWithPm25(session.userId);
-
   const [athlete, activities] = await Promise.all([
     getAthleteProfile(session.userId),
     getActivitiesForUser(session.userId),
   ]);
-  return { athlete, activities };
+  const airQuality = await getAirQualityByActivity(
+    activities.map((activity) => activity.id),
+    RDAQA_SOURCE,
+  );
+
+  return { athlete, activities, airQuality };
 }

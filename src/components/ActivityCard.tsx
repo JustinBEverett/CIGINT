@@ -1,20 +1,28 @@
+import type { AthleteProfile } from "@/src/lib/activities";
 import type { ActivityRow } from "@/src/prisma/activities";
-import { cigarettesFor, formatCigarettes } from "@/src/lib/airquality/cigarettes";
 import AthleteSummary from "./AthleteSummary";
 
 type ActivityCardProps = {
   activity: ActivityRow;
-  athlete: {
-    firstName?: string | null;
-    lastName?: string | null;
-    profileMedium?: string | null;
-  } | null;
+  athlete: AthleteProfile | null;
+  // The air quality section, rendered by the page so it can stream in
+  // behind its own Suspense boundary.
+  children: React.ReactNode;
 };
 
-export default function ActivityCard({ activity, athlete }: ActivityCardProps) {
-  const cigarettes = cigarettesFor(activity);
-  const isPending = activity.pm25 == null && activity.pm25CheckedAt == null;
+function formatDuration(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.round((seconds % 3600) / 60);
+  return hours > 0
+    ? `${hours}h ${String(minutes).padStart(2, "0")}m`
+    : `${minutes}m`;
+}
 
+export default function ActivityCard({
+  activity,
+  athlete,
+  children,
+}: ActivityCardProps) {
   return (
     <article className="flex flex-col gap-3 rounded-lg border border-gray-200 p-4">
       <AthleteSummary
@@ -24,34 +32,46 @@ export default function ActivityCard({ activity, athlete }: ActivityCardProps) {
         startDate={activity.startDate}
       />
 
-      <h2 className="font-semibold">{activity.name}</h2>
-
-      {cigarettes !== null ? (
-        <p className="flex items-baseline gap-2">
-          <span className="text-3xl font-bold">{formatCigarettes(cigarettes)}</span>
-          <span className="text-sm text-gray-500">cigarettes</span>
+      <div className="flex items-baseline justify-between gap-4">
+        <h2 className="font-semibold">{activity.name}</h2>
+        <p className="shrink-0 text-sm text-gray-600">
+          {(activity.distance / 1000).toFixed(1)} km ·{" "}
+          {formatDuration(activity.movingTime)}
         </p>
-      ) : (
-        <p className="text-sm text-gray-500">
-          {isPending
-            ? "Calculating air quality…"
-            : "No air quality data for this location or date"}
-        </p>
-      )}
+      </div>
 
-      <p className="text-sm text-gray-600">
-        {(activity.distance / 1000).toFixed(1)} km
-        {activity.pm25 != null && ` · PM2.5 ${activity.pm25.toFixed(1)} µg/m³`}
-        {" · "}
-        <a
-          href={`https://www.strava.com/activities/${activity.stravaActivityId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-orange-600 underline"
-        >
-          View on Strava
-        </a>
-      </p>
+      {children}
+
+      <a
+        href={`https://www.strava.com/activities/${activity.stravaActivityId}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="self-start text-xs font-medium text-[#FC4C02] hover:underline"
+      >
+        View on Strava
+      </a>
     </article>
+  );
+}
+
+export function ActivityCardSkeleton() {
+  return (
+    <div
+      className="flex animate-pulse flex-col gap-3 rounded-lg border border-gray-200 p-4"
+      aria-hidden
+    >
+      <div className="flex items-center gap-4">
+        <div className="h-[60px] w-[60px] rounded-full bg-gray-100" />
+        <div className="flex flex-col gap-2">
+          <div className="h-3 w-32 rounded bg-gray-100" />
+          <div className="h-3 w-16 rounded bg-gray-100" />
+        </div>
+      </div>
+      <div className="h-4 w-1/2 rounded bg-gray-100" />
+      <div className="grid grid-cols-2 gap-2">
+        <div className="h-[76px] rounded-md bg-gray-100" />
+        <div className="h-[76px] rounded-md bg-gray-100" />
+      </div>
+    </div>
   );
 }
