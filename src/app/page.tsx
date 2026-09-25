@@ -41,7 +41,11 @@ export default async function Home() {
       <section className="flex flex-col gap-2 text-sm text-gray-600">
         <h2 className="text-base font-semibold text-gray-800">Good to know</h2>
         <ul className="list-disc space-y-1 pl-5">
-          <li>Coverage is Canada and the contiguous United States.</li>
+          <li>
+            Coverage is Canada (apart from the high Arctic), the contiguous
+            United States (apart from the southern tip of Texas and the Florida
+            Keys) and most of Alaska.
+          </li>
           <li>
             Only outdoor activities with GPS from the last 30 days are shown,
             since that&apos;s as far back as the air quality data goes.
