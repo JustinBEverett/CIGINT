@@ -42,7 +42,10 @@ export default async function Home() {
         <h2 className="text-base font-semibold text-gray-800">Good to know</h2>
         <ul className="list-disc space-y-1 pl-5">
           <li>Coverage is Canada and the contiguous United States.</li>
-          <li>Air quality data is only published for about the last four weeks.</li>
+          <li>
+            Only outdoor activities with GPS from the last 30 days are shown,
+            since that&apos;s as far back as the air quality data goes.
+          </li>
           <li>
             It&apos;s a rough estimate for fun. It uses the air at the start of
             your activity, not your exact route or breathing rate.

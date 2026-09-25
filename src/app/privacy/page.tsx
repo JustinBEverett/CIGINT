@@ -8,7 +8,7 @@ export default function PrivacyPage() {
         <li>Your Strava name and profile photo URL.</li>
         <li>The Strava access and refresh tokens used to read your activities.</li>
         <li>
-          A summary of each activity from the last few weeks: name, type, start
+          A summary of each outdoor activity from the last 30 days: name, type, start
           time and location, distance, duration, heart rate, and the air quality
           readings we looked up for it.
         </li>

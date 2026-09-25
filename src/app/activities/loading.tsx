@@ -6,7 +6,9 @@ export default function Loading() {
   return (
     <main className="mx-auto flex max-w-xl flex-col gap-4 p-6">
       <section className="flex flex-col gap-2 rounded-lg bg-gray-50 p-4">
-        <div className="h-4 w-24 animate-pulse rounded bg-gray-100" aria-hidden />
+        <p className="text-sm text-gray-500" role="status">
+          Loading your activities…
+        </p>
         <FeedSummarySkeleton />
       </section>
       <ActivityCardSkeleton />

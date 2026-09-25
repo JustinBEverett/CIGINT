@@ -9,7 +9,12 @@ export type ActivityRow = NonNullable<
 export async function getActivitiesForUser(
   userId: UserId,
 ): Promise<ActivityRow[]> {
+  // Sync already skips activities without a start location; this keeps any
+  // stored row without one out of the feed too, since it can never get an
+  // air-quality reading.
   return db.orm.public.Activity.where({ userId })
+    .where((a) => a.startLat.isNotNull())
+    .where((a) => a.startLng.isNotNull())
     .orderBy((a) => a.startDate.desc())
     .all();
 }

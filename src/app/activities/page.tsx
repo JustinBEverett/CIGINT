@@ -26,7 +26,7 @@ export default async function ActivitiesPage() {
   return (
     <main className="mx-auto flex max-w-xl flex-col gap-4 p-6">
       <section className="flex flex-col gap-1 rounded-lg bg-gray-50 p-4">
-        <p className="text-sm text-gray-500">Last 4 weeks</p>
+        <p className="text-sm text-gray-500">Last 30 days</p>
         <Suspense fallback={<FeedSummarySkeleton />}>
           <FeedSummary activities={activities} readings={Promise.all(readings)} />
         </Suspense>
@@ -39,7 +39,7 @@ export default async function ActivitiesPage() {
 
       {activities.length === 0 && (
         <p className="text-gray-600">
-          No activities found in the last four weeks.
+          No outdoor activities found in the last 30 days.
         </p>
       )}
 
