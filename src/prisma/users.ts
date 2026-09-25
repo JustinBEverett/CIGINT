@@ -169,10 +169,21 @@ export async function deleteSessionByToken(token: string): Promise<void> {
   await db.orm.public.Session.where({ token }).delete();
 }
 
-// Removes everything we hold for a user. Children go first because of the
-// foreign keys; the transaction keeps a failure from leaving a half-deleted user.
+// Removes everything we hold for a user. The schema has no cascading foreign
+// keys, so every table is cleared explicitly; the transaction keeps a failure
+// from leaving a half-deleted user.
 export async function deleteUserData(userId: UserId): Promise<void> {
   await db.transaction(async (tx) => {
+    const activities = await tx.orm.public.Activity.select("id")
+      .where({ userId })
+      .all();
+    const activityIds = activities.map((activity) => activity.id);
+    if (activityIds.length > 0) {
+      await tx.orm.public.AirQualityReading.where((r) =>
+        r.activityId.in(activityIds),
+      ).delete();
+    }
+
     await tx.orm.public.Activity.where({ userId }).delete();
     await tx.orm.public.Session.where({ userId }).delete();
     await tx.orm.public.Account.where({ userId }).delete();

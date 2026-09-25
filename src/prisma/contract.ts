@@ -70,6 +70,32 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
     },
   });
 
+  // Air quality for an activity from one data source, averaged over the
+  // 3 hours ending at the activity's start hour (what AQHI is defined on).
+  // status is "prelim" or "final" for that source's product, or
+  // "unavailable" when the activity has no GPS or is outside coverage.
+  // A prelim reading is overwritten in place once the final one is published.
+  const AirQualityReading = model("AirQualityReading", {
+    fields: {
+      id: field.id.uuidv7String(),
+      activityId: field.uuidString(),
+      source: field.text(),
+      status: field.text(),
+      windowStart: field.temporal.timestamptzString().optional(),
+      windowEnd: field.temporal.timestamptzString().optional(),
+      // µg/m³
+      pm25: field.float().optional(),
+      // ppb
+      no2: field.float().optional(),
+      o3: field.float().optional(),
+      aqhi: field.float().optional(),
+      createdAt: field.temporal.createdAtString(),
+      updatedAt: field.temporal.updatedAtString(),
+    },
+  }).attributes(({ fields, constraints }) => ({
+    uniques: [constraints.unique([fields.activityId, fields.source])],
+  }));
+
   return {
     models: {
       User: User.relations({
@@ -79,6 +105,10 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
       }),
       Activity: Activity.relations({
         user: rel.belongsTo(User, { from: "userId", to: "id" }),
+        airQuality: rel.hasMany(AirQualityReading, { by: "activityId" }),
+      }),
+      AirQualityReading: AirQualityReading.relations({
+        activity: rel.belongsTo(Activity, { from: "activityId", to: "id" }),
       }),
       Account: Account.relations({
         user: rel.belongsTo(User, { from: "userId", to: "id" }),
