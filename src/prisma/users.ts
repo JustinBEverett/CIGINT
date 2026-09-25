@@ -164,3 +164,18 @@ export async function getAthleteProfile(userId: UserId) {
     .where({ id: userId })
     .first();
 }
+
+export async function deleteSessionByToken(token: string): Promise<void> {
+  await db.orm.public.Session.where({ token }).delete();
+}
+
+// Removes everything we hold for a user. Children go first because of the
+// foreign keys; the transaction keeps a failure from leaving a half-deleted user.
+export async function deleteUserData(userId: UserId): Promise<void> {
+  await db.transaction(async (tx) => {
+    await tx.orm.public.Activity.where({ userId }).delete();
+    await tx.orm.public.Session.where({ userId }).delete();
+    await tx.orm.public.Account.where({ userId }).delete();
+    await tx.orm.public.User.where({ id: userId }).delete();
+  });
+}

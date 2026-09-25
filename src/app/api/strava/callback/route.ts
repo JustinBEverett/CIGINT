@@ -1,4 +1,5 @@
 import { exchangeCodeForToken, STATE_COOKIE } from "@/src/lib/strava/auth";
+import { appUrl } from "@/src/lib/app-url";
 import { SESSION_COOKIE } from "@/src/lib/constants";
 import { loginWithStrava, type StravaTokenFields } from "@/src/prisma/users";
 import { NextRequest, NextResponse } from "next/server";
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
   const { sessionToken } = await loginWithStrava(fields);
 
   const response = NextResponse.redirect(
-    new URL("/activities", process.env.APP_ORIGIN),
+    appUrl("/activities"),
     303,
   );
   response.cookies.set(SESSION_COOKIE, sessionToken, {

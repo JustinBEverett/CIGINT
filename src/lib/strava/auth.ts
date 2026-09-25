@@ -70,3 +70,10 @@ export async function refreshStravaCredentials(
 
   await updateStravaToken(userId, access_token, refresh_token, expires_at);
 }
+
+// Revokes our access on Strava's side too, so the app disappears from the
+// athlete's connected apps.
+export async function deauthorizeStrava(accessToken: string) {
+  configureStrava();
+  await strava.oauth.deauthorize({ access_token: accessToken });
+}

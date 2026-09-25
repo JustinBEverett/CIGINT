@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SESSION_COOKIE } from "@/src/lib/constants";
+import { DEV_BYPASS_ACTIVE, SESSION_COOKIE } from "@/src/lib/constants";
 
-// Paths reachable without a session. The OAuth routes obviously need to
-// be — everything else requires a cookie until there's a real landing
-// page, at which point "/" moves into this list.
-const PUBLIC_PATHS = ["/api/strava/authorize", "/api/strava/callback"];
-
-// Mirrors the dev bypass in lib/session.ts — never active once NODE_ENV
-// is production, regardless of what DEV_USER_ID is set to.
-const DEV_BYPASS_ACTIVE =
-  process.env.NODE_ENV !== "production" && !!process.env.DEV_USER_ID;
+// Reachable without a session: the landing page, the OAuth routes, and the
+// privacy policy. Everything else needs a session cookie.
+const PUBLIC_EXACT_PATHS = ["/"];
+const PUBLIC_PATH_PREFIXES = [
+  "/api/strava/authorize",
+  "/api/strava/callback",
+  "/privacy",
+];
 
 export function proxy(request: NextRequest) {
   if (DEV_BYPASS_ACTIVE) {
@@ -18,7 +17,10 @@ export function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  if (PUBLIC_PATHS.some((path) => pathname.startsWith(path))) {
+  if (
+    PUBLIC_EXACT_PATHS.includes(pathname) ||
+    PUBLIC_PATH_PREFIXES.some((path) => pathname.startsWith(path))
+  ) {
     return NextResponse.next();
   }
 
@@ -31,6 +33,10 @@ export function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
+// Skip Next's own assets and anything in /public (images etc.), which the
+// landing page needs to load while logged out.
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+  ],
 };
