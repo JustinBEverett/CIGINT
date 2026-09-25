@@ -3,6 +3,7 @@ import {
   cigarettesFor,
   formatCigarettes,
 } from "@/src/lib/airquality/cigarettes";
+import { RDAQA_RETENTION_DAYS } from "@/src/lib/airquality/rdaqa";
 import type { ActivityRow } from "@/src/prisma/activities";
 import type { AirQualityRow } from "@/src/prisma/airquality";
 
@@ -40,9 +41,18 @@ export default async function AirQualityPanel({
     reading.no2 == null ||
     reading.o3 == null
   ) {
+    // Activities without GPS are never imported, so "unavailable" means the
+    // activity was either already too old when it was looked up, or outside
+    // coverage.
+    const ageAtLookupMs =
+      new Date(reading.createdAt).getTime() -
+      new Date(activity.startDate).getTime();
+    const tooOld = ageAtLookupMs > RDAQA_RETENTION_DAYS * 24 * 60 * 60 * 1000;
     return (
       <p className="text-sm text-gray-500">
-        No air quality data for this location or date.
+        {tooOld
+          ? "Air quality data isn't available this far back."
+          : "Currently we don't have air quality data for this location. We hope to support activities outside Canada and the US in the future."}
       </p>
     );
   }
