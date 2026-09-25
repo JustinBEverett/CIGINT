@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ActivityDate from "./ActivityDate";
 
 type AthleteSummaryProps = {
   firstName?: string | null;
@@ -6,20 +7,6 @@ type AthleteSummaryProps = {
   profileMedium?: string | null;
   startDate: string;
 };
-
-function formatStartDate(startDate: string): string {
-  const start = new Date(startDate);
-  const dayMs = 24 * 60 * 60 * 1000;
-  const startOfDay = (d: Date) =>
-    new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-  const daysAgo = Math.round(
-    (startOfDay(new Date()) - startOfDay(start)) / dayMs,
-  );
-
-  if (daysAgo === 0) return "Today";
-  if (daysAgo === 1) return "Yesterday";
-  return start.toLocaleDateString("en-CA", { month: "short", day: "numeric" });
-}
 
 export default function AthleteSummary({
   firstName,
@@ -51,7 +38,9 @@ export default function AthleteSummary({
       </div>
       <div className="athlete-summary--details flex flex-col justify-center">
         <div className="text-sm font-bold">{name}</div>
-        <div className="text-xs text-gray-500">{formatStartDate(startDate)}</div>
+        <div className="text-xs text-gray-500">
+          <ActivityDate startDate={startDate} />
+        </div>
       </div>
     </div>
   );
