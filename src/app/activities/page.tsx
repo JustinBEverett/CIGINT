@@ -25,22 +25,25 @@ export default async function ActivitiesPage() {
 
   return (
     <main className="mx-auto flex max-w-xl flex-col gap-4 p-6">
-      <section className="flex flex-col gap-1 rounded-lg bg-gray-50 p-4">
-        <p className="text-sm text-gray-500">Last 30 days</p>
-        <Suspense fallback={<FeedSummarySkeleton />}>
-          <FeedSummary activities={activities} readings={Promise.all(readings)} />
-        </Suspense>
-        <p className="text-xs text-gray-500">
-          Air quality from Environment and Climate Change Canada&apos;s RDAQA
-          10&nbsp;km analysis, averaged over the 3 hours up to each
-          activity&apos;s start. AQHI is our estimate from the same data.
-        </p>
-      </section>
-
-      {activities.length === 0 && (
+      {activities.length === 0 ? (
         <p className="text-gray-600">
           No outdoor activities found in the last 30 days.
         </p>
+      ) : (
+        <section className="flex flex-col gap-1 rounded-lg bg-gray-50 p-4">
+          <p className="text-sm text-gray-500">Last 30 days</p>
+          <Suspense fallback={<FeedSummarySkeleton />}>
+            <FeedSummary
+              activities={activities}
+              readings={Promise.all(readings)}
+            />
+          </Suspense>
+          <p className="text-xs text-gray-500">
+            Air quality from Environment and Climate Change Canada&apos;s RDAQA
+            10&nbsp;km analysis, averaged over the 3 hours up to each
+            activity&apos;s start. AQHI is our estimate from the same data.
+          </p>
+        </section>
       )}
 
       {activities.map((activity, i) => (

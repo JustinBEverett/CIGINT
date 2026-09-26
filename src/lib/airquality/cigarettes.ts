@@ -29,6 +29,9 @@ export function cigarettesFor(input: CigaretteInput): number | null {
   return (input.pm25 * hours) / UG_HOURS_PER_M3_PER_CIGARETTE;
 }
 
+// "<0.01" is for a real but tiny dose; an exact zero (no air-quality data,
+// or perfectly clean air) shouldn't read as if there were one.
 export function formatCigarettes(value: number): string {
+  if (value === 0) return "0";
   return value < 0.01 ? "<0.01" : value.toFixed(2);
 }

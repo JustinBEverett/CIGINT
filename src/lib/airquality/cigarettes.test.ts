@@ -60,8 +60,12 @@ describe("cigarettesFor", () => {
 });
 
 describe("formatCigarettes", () => {
-  it("shows <0.01 for values below one hundredth", () => {
-    expect(formatCigarettes(0)).toBe("<0.01");
+  it("shows an exact zero as 0", () => {
+    expect(formatCigarettes(0)).toBe("0");
+  });
+
+  it("shows <0.01 for small non-zero values", () => {
+    expect(formatCigarettes(0.0001)).toBe("<0.01");
     expect(formatCigarettes(0.0099)).toBe("<0.01");
   });
 
