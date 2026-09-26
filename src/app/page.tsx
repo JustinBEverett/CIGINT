@@ -1,10 +1,12 @@
 export const dynamic = "force-dynamic";
 
-import { redirect } from "next/navigation";
+import Link from "next/link";
 import ConnectButton from "@/src/components/ConnectButton";
 import { getSessionUserId } from "@/src/lib/session";
 
 export default async function Home() {
+  const userId = await getSessionUserId();
+
   return (
     <main className="mx-auto flex max-w-xl flex-col gap-8 p-6">
       <section className="flex flex-col gap-4 pt-8">
@@ -16,7 +18,16 @@ export default async function Home() {
           and when you were moving, and turns it into a cigarette equivalent.
         </p>
         <div>
-          <ConnectButton />
+          {userId ? (
+            <Link
+              href="/activities"
+              className="inline-block rounded bg-gray-900 px-5 py-3 font-semibold text-white hover:bg-gray-700"
+            >
+              Go to your feed
+            </Link>
+          ) : (
+            <ConnectButton />
+          )}
         </div>
       </section>
 

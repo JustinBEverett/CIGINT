@@ -4,8 +4,9 @@ import SiteFooter from "@/src/components/SiteFooter";
 import SiteHeader from "@/src/components/SiteHeader";
 
 export const metadata: Metadata = {
-  title: "cigint",
-  description: "See how many cigarettes your Strava activities were worth, based on local air quality.",
+  title: "CIGINT",
+  description:
+    "See how many cigarettes your Strava activities were worth, based on local air quality.",
 };
 
 export default function RootLayout({

@@ -1,5 +1,5 @@
-// A plain <a>, not <Link>: the target is an API route that redirects to
-// Strava, and Link would prefetch it (setting the OAuth state cookie early).
+// A plain <a>, not Link: this is a route handler that redirects to
+// strava.com, not a page to navigate to client-side.
 export default function ConnectButton() {
   return (
     <a
