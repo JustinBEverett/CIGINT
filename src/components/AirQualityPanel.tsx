@@ -72,7 +72,9 @@ export default async function AirQualityPanel({
             AQHI
           </p>
           <p className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold">{formatAqhi(reading.aqhi)}</span>
+            <span className="text-3xl font-bold">
+              {formatAqhi(reading.aqhi)}
+            </span>
             <span className="text-sm font-medium">{risk} risk</span>
           </p>
         </div>
@@ -87,8 +89,8 @@ export default async function AirQualityPanel({
       </div>
 
       <p className="text-xs text-gray-500">
-        PM2.5 {reading.pm25.toFixed(1)} µg/m³ · NO₂ {reading.no2.toFixed(1)}{" "}
-        ppb · O₃ {reading.o3.toFixed(1)} ppb
+        PM2.5 {reading.pm25.toFixed(1)} µg/m³ · NO₂ {reading.no2.toFixed(1)} ppb
+        · O₃ {reading.o3.toFixed(1)} ppb
         {reading.status === "prelim" && (
           <span
             className="ml-2 rounded bg-gray-100 px-1.5 py-0.5 font-medium text-gray-600"

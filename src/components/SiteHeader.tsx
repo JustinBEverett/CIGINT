@@ -12,7 +12,7 @@ export default async function SiteHeader() {
   const userId = await getSessionUserId();
 
   return (
-    <header className="border-b border-gray-200">
+    <header className="sticky top-0 z-999 isolate bg-white border-b border-gray-200">
       <div className="mx-auto flex max-w-xl items-center justify-between p-4">
         <Link href={userId ? "/activities" : "/"} className="w-32">
           <Image
@@ -47,7 +47,10 @@ export default async function SiteHeader() {
           ) : (
             // A plain <a>, not Link: this is a route handler that redirects to
             // strava.com, not a page to navigate to client-side.
-            <a href="/api/strava/authorize" className="text-gray-700 hover:underline">
+            <a
+              href="/api/strava/authorize"
+              className="text-gray-700 hover:underline"
+            >
               Log in
             </a>
           )}
