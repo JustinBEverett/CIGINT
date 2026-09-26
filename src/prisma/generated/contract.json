@@ -202,6 +202,20 @@
                   }
                 }
               },
+              "locationCheckedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "locationName": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "maxHeartrate": {
                 "nullable": true,
                 "type": {
@@ -223,17 +237,10 @@
                   "kind": "scalar"
                 }
               },
-              "pm25": {
+              "sportType": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/float8@1",
-                  "kind": "scalar"
-                }
-              },
-              "pm25CheckedAt": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -332,6 +339,12 @@
                 "id": {
                   "column": "id"
                 },
+                "locationCheckedAt": {
+                  "column": "locationCheckedAt"
+                },
+                "locationName": {
+                  "column": "locationName"
+                },
                 "maxHeartrate": {
                   "column": "maxHeartrate"
                 },
@@ -341,11 +354,8 @@
                 "name": {
                   "column": "name"
                 },
-                "pm25": {
-                  "column": "pm25"
-                },
-                "pm25CheckedAt": {
-                  "column": "pm25CheckedAt"
+                "sportType": {
+                  "column": "sportType"
                 },
                 "startDate": {
                   "column": "startDate"
@@ -858,6 +868,16 @@
                     "length": 36
                   }
                 },
+                "locationCheckedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "locationName": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "maxHeartrate": {
                   "codecId": "pg/float8@1",
                   "nativeType": "float8",
@@ -873,14 +893,9 @@
                   "nativeType": "text",
                   "nullable": false
                 },
-                "pm25": {
-                  "codecId": "pg/float8@1",
-                  "nativeType": "float8",
-                  "nullable": true
-                },
-                "pm25CheckedAt": {
-                  "codecId": "pg/timestamptz-string@1",
-                  "nativeType": "timestamptz",
+                "sportType": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
                   "nullable": true
                 },
                 "startDate": {
@@ -1134,7 +1149,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "451ddc07e5300a38cf80d862dbdc4a3e9d6df87695d6bca95f8cb063f4b917a0"
+    "storageHash": "25e5e3b0af8012fa33dde7768809a4a497b033c5131a8ae028901e37de80d893"
   },
   "execution": {
     "executionHash": "b38dada44b8318218d61c7aa80c543a1f1c0f6a64a244f4e413a47c0737aeaf0",

@@ -19,6 +19,36 @@ export async function getActivitiesForUser(
     .all();
 }
 
+// About 100 m of latitude; close enough that two starts share a place name.
+const NEARBY_DEGREES = 0.001;
+
+// A place name already found for a start point near this one, from any
+// activity: it's only a name for a spot on the map, so sharing it across
+// users is harmless, and it saves a geocoding request.
+export async function findNearbyLocationName(
+  lat: number,
+  lng: number,
+): Promise<string | null> {
+  const match = await db.orm.public.Activity.select("locationName")
+    .where((a) => a.locationName.isNotNull())
+    .where((a) => a.startLat.gte(lat - NEARBY_DEGREES))
+    .where((a) => a.startLat.lte(lat + NEARBY_DEGREES))
+    .where((a) => a.startLng.gte(lng - NEARBY_DEGREES))
+    .where((a) => a.startLng.lte(lng + NEARBY_DEGREES))
+    .first();
+  return match?.locationName ?? null;
+}
+
+export async function saveActivityLocation(
+  id: ActivityRow["id"],
+  locationName: string | null,
+): Promise<void> {
+  await db.orm.public.Activity.where({ id }).update({
+    locationName,
+    locationCheckedAt: new Date().toISOString(),
+  });
+}
+
 // Strava's HR fields aren't declared on this package's SummaryActivity type
 // even though the real API returns them (present only when the athlete
 // recorded heart rate).
@@ -40,6 +70,7 @@ export async function upsertActivityFromStrava(
       stravaActivityId: activity.id.toString(),
       name: activity.name,
       type: activity.type,
+      sportType: activity.sport_type,
       startDate: activity.start_date,
       movingTime: activity.moving_time,
       elapsedTime: activity.elapsed_time,

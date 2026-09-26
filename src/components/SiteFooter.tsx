@@ -27,6 +27,17 @@ export default function SiteFooter() {
           </a>
           {" · "}
           Air quality data from Environment and Climate Change Canada (RDAQA)
+          {" · "}
+          Place names ©{" "}
+          <a
+            href="https://www.openstreetmap.org/copyright"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            OpenStreetMap
+          </a>{" "}
+          contributors
         </p>
         <p>
           <Link href="/privacy" className="underline">

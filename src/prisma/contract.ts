@@ -53,6 +53,11 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
       stravaActivityId: field.text().unique(),
       name: field.text(),
       type: field.text(),
+      // Strava's finer-grained sport type ("TrailRun", "GravelRide"). Plain
+      // text rather than an enum because Strava keeps adding values, and an
+      // unknown one must never fail an import. Optional: display falls back
+      // to `type` when it's missing.
+      sportType: field.text().optional(),
       startDate: field.temporal.timestamptzString(),
       movingTime: field.int(),
       elapsedTime: field.int(),
@@ -61,11 +66,11 @@ export const contract = defineContract({}, ({ field, model, rel }) => {
       startLng: field.float().optional(),
       averageHeartrate: field.float().optional(),
       maxHeartrate: field.float().optional(),
-      // Surface PM2.5 (µg/m³) at the start location/hour. pm25CheckedAt is set
-      // once a lookup gave a definitive answer, so a null pm25 with a
-      // timestamp means "no data available" rather than "not looked up yet".
-      pm25: field.float().optional(),
-      pm25CheckedAt: field.temporal.timestamptzString().optional(),
+      // Place name for the start location, from reverse geocoding. Set once:
+      // locationCheckedAt marks a lookup as done, so a null name with a
+      // timestamp means "nothing to call it" rather than "not looked up yet".
+      locationName: field.text().optional(),
+      locationCheckedAt: field.temporal.timestamptzString().optional(),
       createdAt: field.temporal.createdAtString(),
     },
   });
