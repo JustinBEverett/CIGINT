@@ -5,8 +5,6 @@ import ConnectButton from "@/src/components/ConnectButton";
 import { getSessionUserId } from "@/src/lib/session";
 
 export default async function Home() {
-  if (await getSessionUserId()) redirect("/activities");
-
   return (
     <main className="mx-auto flex max-w-xl flex-col gap-8 p-6">
       <section className="flex flex-col gap-4 pt-8">
@@ -14,7 +12,7 @@ export default async function Home() {
           How many cigarettes was your run worth?
         </h1>
         <p className="text-lg text-gray-600">
-          cigint pulls your Strava activities, looks up the air quality where
+          CIGINT pulls your Strava activities, looks up the air quality where
           and when you were moving, and turns it into a cigarette equivalent.
         </p>
         <div>
@@ -25,7 +23,9 @@ export default async function Home() {
       <section className="flex flex-col gap-3">
         <h2 className="text-xl font-semibold">How it works</h2>
         <ol className="list-decimal space-y-2 pl-5 text-gray-700">
-          <li>Connect your Strava account (read-only access to your activities).</li>
+          <li>
+            Connect your Strava account (read-only access to your activities).
+          </li>
           <li>
             For each activity we look up PM2.5 (fine particulate) at the start
             location from Environment and Climate Change Canada&apos;s

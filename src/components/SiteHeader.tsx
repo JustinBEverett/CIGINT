@@ -7,11 +7,8 @@ export default async function SiteHeader() {
   return (
     <header className="border-b border-gray-200">
       <div className="mx-auto flex max-w-xl items-center justify-between p-4">
-        <Link
-          href={userId ? "/activities" : "/"}
-          className="text-lg font-bold tracking-tight"
-        >
-          cigint
+        <Link href={userId ? "/activities" : "/"} className="w-32">
+          <img alt="CIGINT Logo" src="/assets/wordmark-black.svg" />
         </Link>
 
         {userId && (
