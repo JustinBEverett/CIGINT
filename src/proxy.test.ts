@@ -36,7 +36,13 @@ describe("proxy (no dev bypass)", () => {
     vi.stubEnv("DEV_USER_ID", "");
   });
 
-  it.each(["/", "/privacy", "/api/strava/authorize", "/api/strava/callback"])(
+  it.each([
+    "/",
+    "/privacy",
+    "/api/strava/authorize",
+    "/api/strava/callback",
+    "/api/auth/logout",
+  ])(
     "lets %s through without a session",
     async (path) => {
       const proxy = await loadProxy();

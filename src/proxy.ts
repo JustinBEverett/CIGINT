@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DEV_BYPASS_ACTIVE, SESSION_COOKIE } from "@/src/lib/constants";
 
-// Reachable without a session: the landing page, the OAuth routes, and the
-// privacy policy. Everything else needs a session cookie.
+// Reachable without a session: the landing page, the OAuth routes, the
+// privacy policy, and logout (so a stale tab logging out goes home rather
+// than to Strava). Everything else needs a session cookie.
 const PUBLIC_EXACT_PATHS = ["/"];
 const PUBLIC_PATH_PREFIXES = [
   "/api/strava/authorize",
   "/api/strava/callback",
+  "/api/auth/logout",
   "/privacy",
 ];
 
