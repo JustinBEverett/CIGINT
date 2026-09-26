@@ -1,3 +1,4 @@
+import { cache } from "react";
 import {
   GridLoader,
   lookupAirQuality,
@@ -6,6 +7,17 @@ import {
 } from "@/src/lib/airquality/rdaqa";
 import type { ActivityRow } from "@/src/prisma/activities";
 import { saveAirQuality, type AirQualityRow } from "@/src/prisma/airquality";
+
+// One loader per server request, so every lookup in a page render shares
+// its downloads.
+const requestLoader = cache(() => new GridLoader());
+
+// Memoised per request: a card and the feed summary asking about the same
+// activity share one lookup.
+export const airQualityFor = cache(
+  (activity: ActivityRow, existing: AirQualityRow | undefined) =>
+    ensureAirQuality(activity, existing, requestLoader()),
+);
 
 // The stored reading if it's as good as it's going to get, otherwise a fresh
 // lookup saved over it. Never throws: a failed lookup falls back to whatever
