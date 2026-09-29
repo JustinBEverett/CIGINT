@@ -17,7 +17,9 @@ export const metadata: Metadata = {
 // database and Strava, so anyone can see the app without logging in.
 export default async function DemoPage({
   searchParams,
-}: PageProps<"/demo">) {
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   // Render per request so the sample dates stay relative to today.
   await connection();
   const feed = demoFeed();
