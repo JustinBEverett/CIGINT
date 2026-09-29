@@ -1,7 +1,15 @@
 {
-  "name": "cigint-new",
+  "name": "cigint",
   "version": "0.1.0",
   "private": true,
+  "description": "How many cigarettes was your run worth? Air quality for your Strava activities, from Environment Canada data.",
+  "homepage": "https://cigint.justineverett.ca",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JustinBEverett/CIGINT.git"
+  },
+  "author": "Justin Everett (https://www.justineverett.ca)",
+  "license": "MIT",
   "packageManager": "pnpm@12.4.1",
   "type": "module",
   "scripts": {
