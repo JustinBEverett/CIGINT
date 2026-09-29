@@ -3,10 +3,28 @@ import "./globals.css";
 import SiteFooter from "@/src/components/SiteFooter";
 import SiteHeader from "@/src/components/SiteHeader";
 
+const TITLE_PREFIX = process.env.NODE_ENV === "development" ? "[DEV] " : "";
+const DESCRIPTION =
+  "See how many cigarettes your Strava activities were worth, based on local air quality.";
+
 export const metadata: Metadata = {
-  title: `${process.env.NODE_ENV === "development" ? "[DEV] " : ""}CIGINT`,
-  description:
-    "See how many cigarettes your Strava activities were worth, based on local air quality.",
+  // Makes the link preview image's URL absolute. Falls back to localhost
+  // where APP_ORIGIN isn't set, e.g. CI builds.
+  metadataBase: new URL(process.env.APP_ORIGIN ?? "http://localhost:3000"),
+  title: {
+    default: `${TITLE_PREFIX}CIGINT`,
+    template: `${TITLE_PREFIX}%s · CIGINT`,
+  },
+  description: DESCRIPTION,
+  // The image comes from opengraph-image.png beside this file.
+  openGraph: {
+    type: "website",
+    siteName: "CIGINT",
+    title: "CIGINT: how many cigarettes was your run worth?",
+    description: DESCRIPTION,
+    url: "/",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({
