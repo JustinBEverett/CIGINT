@@ -15,8 +15,8 @@ async function isScreenshot(): Promise<boolean> {
   );
 }
 
-// On narrow screens the link to the page you're already on is hidden, which
-// swaps Home and Feed as you move between them.
+// On narrow screens the link to the page you're already on is hidden, to
+// keep the nav on one line.
 const NAV_LINK =
   "text-gray-700 hover:underline aria-[current=page]:font-semibold max-sm:aria-[current=page]:hidden";
 
@@ -27,7 +27,8 @@ export default async function SiteHeader() {
   return (
     <header className="sticky top-0 z-999 isolate bg-white border-b border-gray-200">
       <div className="mx-auto flex max-w-xl items-center justify-between p-4">
-        <Link href={signedIn ? "/activities" : "/"} className="w-32">
+        {/* The wordmark is the home link, so the nav has no "Home". */}
+        <Link href="/" className="w-32">
           <Image
             src="/assets/wordmark-black.svg"
             alt="CIGINT"
@@ -39,8 +40,8 @@ export default async function SiteHeader() {
         </Link>
 
         <nav className="flex items-center gap-4 text-sm">
-          <NavLink href="/" className={NAV_LINK}>
-            Home
+          <NavLink href="/about" className={NAV_LINK}>
+            About
           </NavLink>
 
           {signedIn ? (

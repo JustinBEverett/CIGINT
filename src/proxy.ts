@@ -5,10 +5,10 @@ import {
   screenshotsEnabled,
 } from "@/src/lib/constants";
 
-// Reachable without a session: the landing page, the demo feed, the OAuth
+// Reachable without a session: the landing, about and demo pages, the OAuth
 // routes, the privacy policy, and logout (so a stale tab logging out goes
 // home rather than to Strava). Everything else needs a session cookie.
-const PUBLIC_EXACT_PATHS = ["/", "/demo"];
+const PUBLIC_EXACT_PATHS = ["/", "/about", "/demo"];
 const PUBLIC_PATH_PREFIXES = [
   "/api/strava/authorize",
   "/api/strava/callback",

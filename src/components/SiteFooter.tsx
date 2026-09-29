@@ -40,6 +40,10 @@ export default function SiteFooter() {
           contributors
         </p>
         <p>
+          <Link href="/about" className="underline">
+            About and sources
+          </Link>
+          {" · "}
           <Link href="/privacy" className="underline">
             Privacy
           </Link>
