@@ -10,6 +10,7 @@ import {
 } from "./strava/auth";
 import { StravaClientInstance } from "strava-v3";
 import { DEV_USER_ID, SESSION_COOKIE } from "./constants";
+import { describeStravaError } from "./strava/error";
 
 export interface Session {
   client: StravaClientInstance;
@@ -42,7 +43,14 @@ async function buildSession(userId: UserId): Promise<Session | undefined> {
 
   const { refreshToken, expiresAt } = creds;
   if (expiresAt && new Date(expiresAt).valueOf() < Date.now()) {
-    await refreshStravaCredentials(refreshToken, userId);
+    try {
+      await refreshStravaCredentials(refreshToken, userId);
+    } catch (error) {
+      console.error(
+        "Error refreshing Strava token.",
+        describeStravaError(error),
+      );
+    }
   }
 
   const refreshedCreds = await getStravaCredentials(userId);

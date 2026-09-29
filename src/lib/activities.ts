@@ -1,7 +1,10 @@
 import { RDAQA_RETENTION_DAYS, RDAQA_SOURCE } from "@/src/lib/airquality/rdaqa";
 import { getSession, type Session } from "@/src/lib/session";
 import { syncActivities } from "@/src/lib/strava/sync";
-import { getActivitiesForUser, type ActivityRow } from "@/src/prisma/activities";
+import {
+  getActivitiesForUser,
+  type ActivityRow,
+} from "@/src/prisma/activities";
 import {
   getAirQualityByActivity,
   type AirQualityRow,
@@ -11,6 +14,7 @@ import {
   getLastSyncedAt,
   updateLastSyncedAt,
 } from "@/src/prisma/users";
+import { describeStravaError } from "./strava/error";
 
 const HOUR_MS = 60 * 60 * 1000;
 
@@ -89,7 +93,10 @@ export async function syncNewActivities(
     );
     await updateLastSyncedAt(session.userId);
   } catch (error) {
-    console.error("Strava sync failed; showing stored activities", error);
+    console.error(
+      "Strava sync failed; showing stored activities",
+      describeStravaError(error),
+    );
     return [];
   }
 
