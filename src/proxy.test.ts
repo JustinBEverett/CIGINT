@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { SCREENSHOT_HEADER } from "./lib/constants";
 import { proxy } from "./proxy";
 
 const BASE = "http://localhost:3000";
@@ -72,4 +73,39 @@ describe("proxy", () => {
       expect(response.headers.get("location")).toBeNull();
     },
   );
+});
+
+describe("proxy screenshot mode", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  // NextResponse.next({ request: { headers } }) passes request header
+  // overrides to Next as x-middleware-request-* response headers.
+  function markedAsScreenshot(response: Response) {
+    return (
+      response.headers.get(`x-middleware-request-${SCREENSHOT_HEADER}`) === "1"
+    );
+  }
+
+  it("marks /demo?screenshot when screenshots are enabled", () => {
+    vi.stubEnv("DEMO_SCREENSHOT", "1");
+    const response = proxy(request("/demo?screenshot"));
+
+    expect(passedThrough(response)).toBe(true);
+    expect(markedAsScreenshot(response)).toBe(true);
+  });
+
+  it("does nothing without the env switch", () => {
+    vi.stubEnv("DEMO_SCREENSHOT", "");
+    expect(markedAsScreenshot(proxy(request("/demo?screenshot")))).toBe(false);
+  });
+
+  it("only marks the demo page", () => {
+    vi.stubEnv("DEMO_SCREENSHOT", "1");
+    expect(markedAsScreenshot(proxy(request("/demo")))).toBe(false);
+    expect(
+      markedAsScreenshot(proxy(request("/activities?screenshot"))),
+    ).toBe(false);
+  });
 });

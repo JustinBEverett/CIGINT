@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SESSION_COOKIE } from "@/src/lib/constants";
+import {
+  SCREENSHOT_HEADER,
+  SESSION_COOKIE,
+  screenshotsEnabled,
+} from "@/src/lib/constants";
 
 // Reachable without a session: the landing page, the demo feed, the OAuth
 // routes, the privacy policy, and logout (so a stale tab logging out goes
@@ -13,7 +17,18 @@ const PUBLIC_PATH_PREFIXES = [
 ];
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, searchParams } = request.nextUrl;
+
+  // The header can't see the page's URL, so tell it about screenshot mode.
+  if (
+    pathname === "/demo" &&
+    searchParams.has("screenshot") &&
+    screenshotsEnabled()
+  ) {
+    const headers = new Headers(request.headers);
+    headers.set(SCREENSHOT_HEADER, "1");
+    return NextResponse.next({ request: { headers } });
+  }
 
   if (
     PUBLIC_EXACT_PATHS.includes(pathname) ||

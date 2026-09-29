@@ -1,7 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
+import { headers } from "next/headers";
+import { SCREENSHOT_HEADER, screenshotsEnabled } from "@/src/lib/constants";
 import { getSessionUserId } from "@/src/lib/session";
 import NavLink from "./NavLink";
+
+// Screenshot mode (/demo?screenshot, see src/lib/demo.ts) shows the signed-in
+// links. The env check means a spoofed request header does nothing in
+// production.
+async function isScreenshot(): Promise<boolean> {
+  return (
+    screenshotsEnabled() &&
+    (await headers()).get(SCREENSHOT_HEADER) === "1"
+  );
+}
 
 // On narrow screens the link to the page you're already on is hidden, which
 // swaps Home and Feed as you move between them.
@@ -9,12 +21,13 @@ const NAV_LINK =
   "text-gray-700 hover:underline aria-[current=page]:font-semibold max-sm:aria-[current=page]:hidden";
 
 export default async function SiteHeader() {
-  const userId = await getSessionUserId();
+  const signedIn =
+    (await getSessionUserId()) !== undefined || (await isScreenshot());
 
   return (
     <header className="sticky top-0 z-999 isolate bg-white border-b border-gray-200">
       <div className="mx-auto flex max-w-xl items-center justify-between p-4">
-        <Link href={userId ? "/activities" : "/"} className="w-32">
+        <Link href={signedIn ? "/activities" : "/"} className="w-32">
           <Image
             src="/assets/wordmark-black.svg"
             alt="CIGINT"
@@ -30,7 +43,7 @@ export default async function SiteHeader() {
             Home
           </NavLink>
 
-          {userId ? (
+          {signedIn ? (
             <>
               <NavLink href="/activities" className={NAV_LINK}>
                 Feed
