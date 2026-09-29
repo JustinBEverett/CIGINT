@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { DEV_BYPASS_ACTIVE, SESSION_COOKIE } from "@/src/lib/constants";
+import { SESSION_COOKIE } from "@/src/lib/constants";
 
 // Reachable without a session: the landing page, the OAuth routes, the
 // privacy policy, and logout (so a stale tab logging out goes home rather
@@ -13,10 +13,6 @@ const PUBLIC_PATH_PREFIXES = [
 ];
 
 export function proxy(request: NextRequest) {
-  if (DEV_BYPASS_ACTIVE) {
-    return NextResponse.next();
-  }
-
   const { pathname } = request.nextUrl;
 
   if (

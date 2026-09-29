@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { redirect } from "next/navigation";
 import DeleteAccountForm from "@/src/components/DeleteAccountForm";
-import { DEV_BYPASS_ACTIVE } from "@/src/lib/constants";
+import { REVOKE_STRAVA_ON_DELETE } from "@/src/lib/constants";
 import { getSessionUserId } from "@/src/lib/session";
 import { getAthleteProfile } from "@/src/prisma/users";
 
@@ -26,13 +26,13 @@ export default async function AccountPage() {
           Revokes cigint&apos;s access on Strava and permanently deletes your
           profile, sessions, tokens and imported activities from our database.
         </p>
-        {DEV_BYPASS_ACTIVE ? (
+        {!REVOKE_STRAVA_ON_DELETE && (
           <p className="text-sm text-gray-500">
-            Disabled while DEV_USER_ID is set, since that points at a real user.
+            Development: this deletes local data only. Strava access isn&apos;t
+            revoked, because production uses the same Strava app.
           </p>
-        ) : (
-          <DeleteAccountForm />
         )}
+        <DeleteAccountForm />
       </section>
     </main>
   );

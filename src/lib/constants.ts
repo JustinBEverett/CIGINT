@@ -2,14 +2,9 @@
 // DB clients or anything else heavy.
 export const SESSION_COOKIE = "cigint_session";
 
-// Strava only allows one Authorization Callback Domain per app, so local
-// development skips OAuth and acts as a fixed user instead. Never active in
-// production regardless of the env — Vercel always sets NODE_ENV=production.
-// `|| undefined` so an empty DEV_USER_ID (e.g. copied from .env.example)
-// counts as unset.
-export const DEV_USER_ID: string | undefined =
-  process.env.NODE_ENV !== "production"
-    ? process.env.DEV_USER_ID || undefined
-    : undefined;
-
-export const DEV_BYPASS_ACTIVE = DEV_USER_ID !== undefined;
+// Local development uses the same Strava app as production, and
+// deauthorizing revokes that app's access for the athlete everywhere, so
+// deleting a local account would log them out of production too. Only
+// production revokes Strava access; local deletes remove local data only.
+// Vercel always sets NODE_ENV=production.
+export const REVOKE_STRAVA_ON_DELETE = process.env.NODE_ENV === "production";

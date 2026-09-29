@@ -9,7 +9,7 @@ import {
   refreshStravaCredentials,
 } from "./strava/auth";
 import { StravaClientInstance } from "strava-v3";
-import { DEV_USER_ID, SESSION_COOKIE } from "./constants";
+import { SESSION_COOKIE } from "./constants";
 import { describeStravaError } from "./strava/error";
 
 export interface Session {
@@ -20,8 +20,6 @@ export interface Session {
 // The lightweight check: who is this request, without touching Strava.
 // Used where only identity matters (landing redirect, header, logout).
 export async function getSessionUserId(): Promise<UserId | undefined> {
-  if (DEV_USER_ID) return DEV_USER_ID as UserId;
-
   const reqCookies = await cookies();
   const sessionToken = reqCookies.get(SESSION_COOKIE)?.value;
   if (!sessionToken) return undefined;

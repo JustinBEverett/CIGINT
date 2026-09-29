@@ -1,6 +1,11 @@
 node_modules/
 dist/
 .env
+.env*.local
+# Production DATABASE_URL, used only to run migrations against production.
+# Named so Next.js never loads it automatically.
+.env.prod-migrate
 tsconfig.tsbuildinfo
 /.next
 .vercel
+.prisma/

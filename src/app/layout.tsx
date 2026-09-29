@@ -4,7 +4,7 @@ import SiteFooter from "@/src/components/SiteFooter";
 import SiteHeader from "@/src/components/SiteHeader";
 
 export const metadata: Metadata = {
-  title: "CIGINT",
+  title: `${process.env.NODE_ENV === "development" ? "[DEV] " : ""}CIGINT`,
   description:
     "See how many cigarettes your Strava activities were worth, based on local air quality.",
 };
