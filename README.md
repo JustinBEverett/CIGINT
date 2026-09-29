@@ -9,12 +9,18 @@ reading and a cigarette-equivalent dose of fine particulate matter (PM2.5).
 
 **Live:** [cigint.justineverett.ca](https://cigint.justineverett.ca)
 &nbsp;·&nbsp;
+**Demo:** [sample feed, no login](https://cigint.justineverett.ca/demo)
+&nbsp;·&nbsp;
 [![CI](https://github.com/JustinBEverett/CIGINT/actions/workflows/ci.yml/badge.svg)](https://github.com/JustinBEverett/CIGINT/actions/workflows/ci.yml)
 
-<!-- Screenshot of the feed at phone width goes here. -->
+<p align="center">
+  <img src="docs/demo-feed.png" width="360" alt="The CIGINT feed on a phone: a summary of 0.61 cigarettes over the last 30 days, then activity cards for a smoky ride in Kelowna with an AQHI of 9 (high risk), a run in Vancouver, and a hike near Squamish, each with AQHI, cigarettes and pollutant readings.">
+</p>
 
 > Strava limits apps like this one to a small number of connected athletes,
-> so logging in on the live site may not be open to everyone.
+> so logging in on the live site may not be open to everyone. The
+> [demo feed](https://cigint.justineverett.ca/demo) shows the same
+> interface with sample activities.
 
 ## What it does
 

@@ -22,6 +22,7 @@ function passedThrough(response: Response) {
 describe("proxy", () => {
   it.each([
     "/",
+    "/demo",
     "/privacy",
     "/api/strava/authorize",
     "/api/strava/callback",

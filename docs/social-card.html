@@ -1,0 +1,72 @@
+<!doctype html>
+<!--
+  Source for the README screenshot and GitHub social preview.
+
+  1. Serve a production build with screenshot mode on (the dev server shows
+     Next's development badge, so use a production build):
+
+       pnpm build
+       DEMO_SCREENSHOT=1 DEMO_SCREENSHOT_NAME="Jordan Hale" \
+         DEMO_SCREENSHOT_AVATAR_URL="<photo URL>" pnpm start -p 3100
+
+  2. Capture the feed at phone width (430 CSS px at 2x). Adjust the height
+     so the capture ends just below a card:
+
+       google-chrome --headless=new --hide-scrollbars \
+         --force-device-scale-factor=2 --window-size=430,1064 \
+         --virtual-time-budget=10000 --screenshot=docs/demo-feed.png \
+         "http://localhost:3100/demo?screenshot"
+
+  3. Render this page at 1280 × 640. The output is the site's link preview
+     image (Next serves it as og:image), and the same file is uploaded to
+     the GitHub repo's Settings → General → Social preview:
+
+       google-chrome --headless=new --hide-scrollbars \
+         --allow-file-access-from-files --window-size=1280,640 \
+         --virtual-time-budget=5000 --screenshot=src/app/opengraph-image.png \
+         "file://$PWD/docs/social-card.html"
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1280px; height: 640px; overflow: hidden; }
+  body {
+    font-family: "Noto Sans", system-ui, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2f6 100%);
+    color: #111827;
+    position: relative;
+  }
+  .text {
+    position: absolute; left: 88px; top: 0; bottom: 0; width: 600px;
+    display: flex; flex-direction: column; justify-content: center; gap: 28px;
+  }
+  .wordmark { width: 300px; height: auto; }
+  h1 { font-size: 60px; line-height: 1.08; font-weight: 800; letter-spacing: -1.5px; }
+  p.sub { font-size: 25px; line-height: 1.4; color: #4b5563; max-width: 540px; }
+  .url { font-size: 22px; font-weight: 600; color: #FC4C02; }
+  .phone {
+    position: absolute; right: 96px; top: 56px;
+    width: 400px; height: 640px;
+    border-radius: 36px 36px 0 0;
+    border: 10px solid #111827; border-bottom: none;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(17, 24, 39, 0.18);
+  }
+  .phone img { width: 100%; display: block; }
+</style>
+</head>
+<body>
+  <div class="text">
+    <img class="wordmark" src="../public/assets/wordmark-black.svg" alt="">
+    <h1>How many cigarettes was your run worth?</h1>
+    <p class="sub">Air quality for every Strava activity, from Environment Canada data.</p>
+    <p class="url">cigint.justineverett.ca</p>
+  </div>
+  <div class="phone">
+    <img src="demo-feed.png" alt="">
+  </div>
+</body>
+</html>

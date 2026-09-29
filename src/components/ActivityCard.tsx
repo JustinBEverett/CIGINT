@@ -13,6 +13,8 @@ type ActivityCardProps = {
   // The air quality section, rendered by the page so it can stream in
   // behind its own Suspense boundary.
   children: React.ReactNode;
+  // Off for sample activities (the demo feed), which don't exist on Strava.
+  linkToStrava?: boolean;
 };
 
 function formatDuration(seconds: number): string {
@@ -28,6 +30,7 @@ export default function ActivityCard({
   athlete,
   location,
   children,
+  linkToStrava = true,
 }: ActivityCardProps) {
   const sport = sportFor(activity.sportType, activity.type);
   return (
@@ -60,14 +63,16 @@ export default function ActivityCard({
 
       {children}
 
-      <a
-        href={`https://www.strava.com/activities/${activity.stravaActivityId}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="self-start text-xs font-medium text-[#FC4C02] hover:underline"
-      >
-        View on Strava
-      </a>
+      {linkToStrava && (
+        <a
+          href={`https://www.strava.com/activities/${activity.stravaActivityId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="self-start text-xs font-medium text-[#FC4C02] hover:underline"
+        >
+          View on Strava
+        </a>
+      )}
     </article>
   );
 }
