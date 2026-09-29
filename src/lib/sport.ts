@@ -1,7 +1,9 @@
-import type { Icon } from "@phosphor-icons/react";
+import { type Icon } from "@phosphor-icons/react";
 import {
   BicycleIcon,
   BoatIcon,
+  BootIcon,
+  FootprintsIcon,
   GolfIcon,
   MountainsIcon,
   PersonSimpleHikeIcon,
@@ -12,6 +14,7 @@ import {
   PersonSimpleWalkIcon,
   PulseIcon,
   SailboatIcon,
+  SneakerIcon,
   SneakerMoveIcon,
   SnowflakeIcon,
   WavesIcon,
@@ -25,9 +28,9 @@ export type Sport = { label: string; Icon: Icon };
 // Keys are Strava sport types; legacy activity types are a subset of these
 // names, so the same table covers both.
 const ICON_GROUPS: [Icon, SportType[]][] = [
-  [PersonSimpleRunIcon, ["Run", "TrailRun", "VirtualRun"]],
-  [PersonSimpleWalkIcon, ["Walk"]],
-  [PersonSimpleHikeIcon, ["Hike"]],
+  [PersonSimpleRunIcon, ["VirtualRun"]],
+  [FootprintsIcon, ["Walk"]],
+  [BootIcon, ["Hike"]],
   [
     BicycleIcon,
     [
@@ -42,10 +45,14 @@ const ICON_GROUPS: [Icon, SportType[]][] = [
     ],
   ],
   [PersonSimpleSwimIcon, ["Swim"]],
-  [PersonSimpleSkiIcon, ["AlpineSki", "BackcountrySki", "NordicSki", "RollerSki"]],
+  [
+    PersonSimpleSkiIcon,
+    ["AlpineSki", "BackcountrySki", "NordicSki", "RollerSki"],
+  ],
   [PersonSimpleSnowboardIcon, ["Snowboard"]],
   [SnowflakeIcon, ["Snowshoe", "IceSkate"]],
-  [SneakerMoveIcon, ["InlineSkate", "Skateboard"]],
+  [SneakerIcon, ["TrailRun"]],
+  [SneakerMoveIcon, ["Run", "InlineSkate", "Skateboard"]],
   [
     BoatIcon,
     ["Rowing", "VirtualRow", "Canoeing", "Kayaking", "StandUpPaddling"],

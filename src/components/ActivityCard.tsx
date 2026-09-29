@@ -30,7 +30,6 @@ export default function ActivityCard({
   children,
 }: ActivityCardProps) {
   const sport = sportFor(activity.sportType, activity.type);
-
   return (
     <article className="flex flex-col gap-3 rounded-lg border border-gray-200 p-4">
       <AthleteSummary
