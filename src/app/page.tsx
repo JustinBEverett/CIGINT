@@ -12,10 +12,11 @@ export default async function Home() {
     // Phones: the mockup above the text, fading out at the bottom so the
     // headline can sit over its lower edge. Wider screens: the mockup on the
     // left, staying in view beside the text as it scrolls.
-    <main className="mx-auto flex max-w-xl flex-col items-center gap-10 p-6 pt-10 md:max-w-4xl md:flex-row md:items-start md:gap-14 md:pt-14">
+    <main className="mx-auto flex max-w-xl flex-col items-center gap-6 p-6 pt-6 md:max-w-4xl md:flex-row md:items-start md:gap-14 md:pt-14">
       {/* The mask clips anything outside this box, so the padding keeps the
-          phone's frame and shadow inside it. */}
-      <div className="max-md:-mb-32 max-md:px-8 max-md:pt-2 max-md:[mask-image:linear-gradient(to_bottom,black_45%,transparent_85%)] md:sticky md:top-28">
+          phone's frame and shadow inside it. The fade and negative margin
+          keep the call to action above the fold on a phone. */}
+      <div className="max-md:-mb-20 max-md:px-8 max-md:pt-2 max-md:[mask-image:linear-gradient(to_bottom,black_40%,transparent_78%)] md:sticky md:top-28">
         <PhoneMockup />
       </div>
 

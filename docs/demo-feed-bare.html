@@ -1,0 +1,28 @@
+<!doctype html>
+<!--
+  The home page's phone mockup image: docs/demo-feed.png without the site
+  header, so the phone doesn't show a second header. Run after capturing
+  demo-feed.png (steps in docs/social-card.html):
+
+    google-chrome --headless=new --hide-scrollbars \
+      --allow-file-access-from-files --force-device-scale-factor=2 \
+      --window-size=430,1000 --virtual-time-budget=5000 \
+      --screenshot=docs/demo-feed-bare.png \
+      "file://$PWD/docs/demo-feed-bare.html"
+
+  The offset is the header's height (55 CSS px, including its border) plus
+  12 px of the page's top padding. Update it if the header height changes.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; }
+  html, body { width: 430px; overflow: hidden; background: #fff; }
+  img { display: block; width: 430px; margin-top: -67px; }
+</style>
+</head>
+<body>
+  <img src="demo-feed.png" alt="">
+</body>
+</html>
