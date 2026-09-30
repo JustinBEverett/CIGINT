@@ -30,6 +30,7 @@
   "dependencies": {
     "@azohra/meteo.grib": "^0.1.4",
     "@azohra/meteo.j2k": "^0.2.0",
+    "@next/third-parties": "16.1.6",
     "@phosphor-icons/react": "^2.1.10",
     "@prisma/orm-postgres": "8.0.0-rc.8",
     "@tailwindcss/postcss": "^4.3.3",
