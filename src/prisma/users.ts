@@ -31,6 +31,8 @@ export interface StravaCredentials {
 export async function loginWithStrava(fields: StravaTokenFields): Promise<{
   userId: UserId;
   sessionToken: string;
+  // True when this login created the user (a sign-up, for analytics).
+  isNewUser: boolean;
 }> {
   const expiresAtIso = new Date(fields.expiresAt * 1000).toISOString();
 
@@ -72,7 +74,7 @@ export async function loginWithStrava(fields: StravaTokenFields): Promise<{
   });
 
   const sessionToken = await createSession(userId);
-  return { userId, sessionToken };
+  return { userId, sessionToken, isNewUser: !existingAccount };
 }
 
 async function createSession(userId: UserId): Promise<string> {

@@ -4,17 +4,12 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import SiteFooter from "@/src/components/SiteFooter";
 import SiteHeader from "@/src/components/SiteHeader";
+import { GA_MEASUREMENT_ID, isLiveSite } from "@/src/lib/analytics";
 
 const TITLE_PREFIX = process.env.NODE_ENV === "development" ? "[DEV] " : "";
 const SITE_TITLE = "CIGINT | Smoke the competition 💨";
 const DESCRIPTION =
   "See how many cigarettes your Strava activities were worth, based on local air quality.";
-
-// Google Analytics, only on the live site: Vercel sets VERCEL_ENV to
-// "production" there, and to "preview" or nothing everywhere else, so local
-// dev and preview deploys don't count as visits.
-const GA_MEASUREMENT_ID = "G-62WW2T3NZH";
-const IS_LIVE_SITE = process.env.VERCEL_ENV === "production";
 
 export const metadata: Metadata = {
   // Makes the link preview image's URL absolute. Falls back to localhost
@@ -50,7 +45,8 @@ export default function RootLayout({
         <SiteFooter />
         <Analytics />
       </body>
-      {IS_LIVE_SITE && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}
+      {/* Google Analytics only on the live site (see src/lib/analytics.ts). */}
+      {isLiveSite() && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}
     </html>
   );
 }

@@ -1,8 +1,9 @@
 import { exchangeCodeForToken, STATE_COOKIE } from "@/src/lib/strava/auth";
+import { sendGaEvent } from "@/src/lib/analytics";
 import { appUrl } from "@/src/lib/app-url";
 import { SESSION_COOKIE } from "@/src/lib/constants";
 import { loginWithStrava, type StravaTokenFields } from "@/src/prisma/users";
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -48,7 +49,15 @@ export async function GET(request: NextRequest) {
     scope: token.scope,
   };
 
-  const { sessionToken } = await loginWithStrava(fields);
+  const { sessionToken, isNewUser } = await loginWithStrava(fields);
+
+  // GA4's recommended event names. Sent from the server so ad blockers
+  // don't lose it, and after the response so the redirect isn't delayed.
+  after(() =>
+    sendGaEvent(request.cookies, isNewUser ? "sign_up" : "login", {
+      method: "Strava",
+    }),
+  );
 
   const response = NextResponse.redirect(
     appUrl("/activities"),

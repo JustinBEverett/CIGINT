@@ -38,7 +38,7 @@ export default async function Home() {
                 Go to your feed
               </Link>
             ) : (
-              <ConnectButton />
+              <ConnectButton from="home" />
             )}
             <Link href="/demo" className="font-medium text-gray-700 underline">
               See a demo

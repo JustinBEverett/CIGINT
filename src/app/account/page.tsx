@@ -24,7 +24,7 @@ export default async function AccountPage() {
           at any time.
         </p>
         <div>
-          <ConnectButton />
+          <ConnectButton from="account" />
         </div>
       </main>
     );
