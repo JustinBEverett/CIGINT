@@ -62,6 +62,16 @@ export default function PrivacyPage() {
           .
         </li>
         <li>
+          <strong>Vercel Web Analytics:</strong> our host,{" "}
+          <ExternalLink href="https://vercel.com/docs/analytics/privacy-policy">
+            Vercel
+          </ExternalLink>
+          , also counts page views. It doesn&apos;t use cookies. It records
+          the page, the site you came from, and your country, browser and
+          device type, but not who you are, and it doesn&apos;t receive your
+          Strava data.
+        </li>
+        <li>
           <strong>Strava:</strong> under its API agreement, Strava may collect
           information about how CIGINT uses the Strava API, and may use it for
           its own purposes.
