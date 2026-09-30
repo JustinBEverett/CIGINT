@@ -1,10 +1,13 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import DeleteAccountForm from "@/src/components/DeleteAccountForm";
 import { REVOKE_STRAVA_ON_DELETE } from "@/src/lib/constants";
 import { getSessionUserId } from "@/src/lib/session";
 import { getAthleteProfile } from "@/src/prisma/users";
+
+export const metadata: Metadata = { title: "Account" };
 
 export default async function AccountPage() {
   const userId = await getSessionUserId();

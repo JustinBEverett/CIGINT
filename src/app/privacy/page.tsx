@@ -1,3 +1,7 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Privacy" };
+
 export default function PrivacyPage() {
   return (
     <main className="mx-auto flex max-w-xl flex-col gap-4 p-6">

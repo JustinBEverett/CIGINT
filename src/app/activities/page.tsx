@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
 import ActivityCard, { ActivityCardSkeleton } from "@/src/components/ActivityCard";
@@ -13,6 +14,8 @@ import type { ActivityRow } from "@/src/prisma/activities";
 // A first import can look up a few dozen activities; the response streams
 // the whole time, so allow up to the Hobby plan maximum.
 export const maxDuration = 300;
+
+export const metadata: Metadata = { title: "Activities" };
 
 // Streams in three layers: stored cards render straight from the DB, new
 // activities appear at the top once the Strava sync settles, and each card's
