@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "CIGINT",
-    title: "CIGINT: how many cigarettes was your run worth?",
+    title: "CIGINT – Smoke the competition",
     description: DESCRIPTION,
     url: "/",
   },
