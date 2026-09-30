@@ -26,7 +26,7 @@ export default async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-999 isolate bg-white border-b border-gray-200">
-      <div className="mx-auto flex max-w-xl items-center justify-between p-4">
+      <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
         {/* The wordmark is the home link, so the nav has no "Home". */}
         <Link href="/" className="w-32">
           <Image
