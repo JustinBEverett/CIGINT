@@ -24,6 +24,7 @@ describe("proxy", () => {
   it.each([
     "/",
     "/about",
+    "/account",
     "/demo",
     "/sitemap.xml",
     "/robots.txt",
@@ -46,7 +47,7 @@ describe("proxy", () => {
     expect(passedThrough(response)).toBe(true);
   });
 
-  it.each(["/activities", "/account", "/api/account/delete"])(
+  it.each(["/activities", "/api/account/delete"])(
     "redirects %s to Strava authorization without a session",
     (path) => {
       const response = proxy(request(path));

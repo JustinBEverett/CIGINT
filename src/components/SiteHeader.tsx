@@ -44,30 +44,16 @@ export default async function SiteHeader() {
             About
           </NavLink>
 
-          {signedIn ? (
-            <>
-              <NavLink href="/activities" className={NAV_LINK}>
-                Feed
-              </NavLink>
-              <NavLink href="/account" className={NAV_LINK}>
-                Account
-              </NavLink>
-              <form action="/api/auth/logout" method="post">
-                <button type="submit" className="text-gray-700 hover:underline">
-                  Log out
-                </button>
-              </form>
-            </>
-          ) : (
-            // A plain <a>, not Link: this is a route handler that redirects to
-            // strava.com, not a page to navigate to client-side.
-            <a
-              href="/api/strava/authorize"
-              className="text-gray-700 hover:underline"
-            >
-              Log in
-            </a>
+          {signedIn && (
+            <NavLink href="/activities" className={NAV_LINK}>
+              Feed
+            </NavLink>
           )}
+          {/* Logging in and out both happen on the Account page, which keeps
+              the nav to three links at most. */}
+          <NavLink href="/account" className={NAV_LINK}>
+            Account
+          </NavLink>
         </nav>
       </div>
     </header>

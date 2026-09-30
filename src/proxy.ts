@@ -6,12 +6,14 @@ import {
 } from "@/src/lib/constants";
 
 // Reachable without a session: the landing, about and demo pages, the
-// sitemap and robots.txt for crawlers, the OAuth routes, the privacy policy,
-// and logout (so a stale tab logging out goes home rather than to Strava).
-// Everything else needs a session cookie.
+// account page (where you log in when signed out), the sitemap and
+// robots.txt for crawlers, the OAuth routes, the privacy policy, and logout
+// (so a stale tab logging out goes home rather than to Strava). Everything
+// else needs a session cookie.
 const PUBLIC_EXACT_PATHS = [
   "/",
   "/about",
+  "/account",
   "/demo",
   "/sitemap.xml",
   "/robots.txt",
