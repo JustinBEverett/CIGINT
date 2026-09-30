@@ -51,7 +51,7 @@ export default async function AirQualityPanel({
     return (
       <p className="text-sm text-gray-500">
         {tooOld
-          ? "Air quality data isn't available this far back."
+          ? "Currently, air quality data isn’t available this far back. We’re working on it."
           : "Currently we don't have air quality data for this location. We hope to support activities outside Canada and the US in the future."}
       </p>
     );
