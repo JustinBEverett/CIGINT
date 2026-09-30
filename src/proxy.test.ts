@@ -25,6 +25,8 @@ describe("proxy", () => {
     "/",
     "/about",
     "/demo",
+    "/sitemap.xml",
+    "/robots.txt",
     "/privacy",
     "/api/strava/authorize",
     "/api/strava/callback",
