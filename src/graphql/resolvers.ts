@@ -1,7 +1,13 @@
+import { syncWindowStart } from "@/src/lib/activities";
 import { cigarettesFor } from "@/src/lib/airquality/cigarettes";
 import { describeStravaError } from "@/src/lib/strava/error";
+import { syncActivities } from "@/src/lib/strava/sync";
 import { getActivitiesForUser } from "@/src/prisma/activities";
-import { getAthleteProfile, getLastSyncedAt } from "@/src/prisma/users";
+import {
+  getAthleteProfile,
+  getLastSyncedAt,
+  updateLastSyncedAt,
+} from "@/src/prisma/users";
 import type { GraphQLContext } from "./context";
 import {
   toActivity,
@@ -69,6 +75,31 @@ export const resolvers = {
         if (describeStravaError(error).statusCode === 404) return null;
         throw error;
       }
+    },
+  },
+
+  Mutation: {
+    syncActivities: async (
+      _parent: unknown,
+      _args: unknown,
+      { strava, userId }: GraphQLContext,
+    ) => {
+      const windowStart = syncWindowStart(
+        await getLastSyncedAt(userId),
+        Date.now(),
+      );
+      if (windowStart === null) return [];
+
+      const known = new Set(
+        (await getActivitiesForUser(userId)).map((activity) => activity.id),
+      );
+      await syncActivities(strava, userId, Math.floor(windowStart / 1000));
+      await updateLastSyncedAt(userId);
+
+      const all = await getActivitiesForUser(userId);
+      return all
+        .filter((activity) => !known.has(activity.id))
+        .map(toStoredActivity);
     },
   },
 

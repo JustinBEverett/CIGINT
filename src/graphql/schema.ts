@@ -105,6 +105,14 @@ export const typeDefs = /* GraphQL */ `
     lastSyncedAt: String
   }
 
+  type Mutation {
+    # Fetches new activities from Strava into our database and returns the
+    # ones that weren't stored before. Returns an empty list without asking
+    # Strava if the last sync was recent, since Strava's rate limits are shared
+    # across all users. Unlike a page load, a Strava failure is an error here.
+    syncActivities: [Activity!]!
+  }
+
   type Query {
     # The signed-in athlete.
     me: Athlete!
