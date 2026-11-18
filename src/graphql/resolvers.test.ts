@@ -1,7 +1,7 @@
 import type { StravaClientInstance } from "strava-v3";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { GridLoader } from "@/src/lib/airquality/rdaqa";
 import type { UserId } from "@/src/prisma/users";
+import type { Loaders } from "./loaders";
 import { createServer } from "./server";
 
 const listActivities = vi.fn();
@@ -23,8 +23,8 @@ async function run(query: string, variables?: Record<string, unknown>) {
       contextValue: {
         strava,
         userId: "user-1" as UserId,
-        // Nothing in the Strava-only resolvers touches the grid loader.
-        gridLoader: {} as GridLoader,
+        // Nothing in the Strava-only resolvers touches the loaders.
+        loaders: {} as Loaders,
       },
     },
   );

@@ -19,6 +19,20 @@ export async function getActivitiesForUser(
     .all();
 }
 
+// The stored rows for some of a user's Strava activities, in a single query.
+// An id with no row (not synced yet, or skipped for having no start
+// location) is simply absent from the result.
+export async function getActivitiesByStravaIds(
+  userId: UserId,
+  stravaActivityIds: string[],
+): Promise<ActivityRow[]> {
+  if (stravaActivityIds.length === 0) return [];
+
+  return db.orm.public.Activity.where({ userId })
+    .where((a) => a.stravaActivityId.in(stravaActivityIds))
+    .all();
+}
+
 // About 100 m of latitude; close enough that two starts share a place name.
 const NEARBY_DEGREES = 0.001;
 
