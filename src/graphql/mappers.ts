@@ -1,5 +1,6 @@
 import type { SummaryActivity, SummaryAthlete } from "strava-v3";
 import { aqhiRisk, type AqhiRisk } from "@/src/lib/airquality/aqhi";
+import type { ActivityRow } from "@/src/prisma/activities";
 import type { AirQualityRow } from "@/src/prisma/airquality";
 
 // Pure conversions from Strava's REST objects to the shapes in schema.ts.
@@ -74,6 +75,27 @@ export function toActivity(activity: StravaActivity): Activity {
       : null,
     averageHeartrate: activity.average_heartrate ?? null,
     maxHeartrate: activity.max_heartrate ?? null,
+  };
+}
+
+// A stored activity as the graph's Activity. The id stays Strava's, so
+// activities from the database and from Strava are the same thing to a
+// client and share one air-quality lookup key.
+export function toStoredActivity(row: ActivityRow): Activity {
+  return {
+    id: row.stravaActivityId,
+    name: row.name,
+    type: row.type,
+    sportType: row.sportType ?? null,
+    distance: row.distance,
+    movingTime: row.movingTime,
+    elapsedTime: row.elapsedTime,
+    startDate: row.startDate,
+    startLocation: toLatLng([row.startLat, row.startLng]),
+    // Routes aren't stored.
+    map: null,
+    averageHeartrate: row.averageHeartrate ?? null,
+    maxHeartrate: row.maxHeartrate ?? null,
   };
 }
 

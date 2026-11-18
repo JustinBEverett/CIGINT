@@ -85,9 +85,33 @@ export const typeDefs = /* GraphQL */ `
     profileMedium: String
   }
 
+  # The athlete's name and picture as stored when they signed in. Unlike
+  # Athlete (read live from Strava) this needs no Strava request.
+  type Profile {
+    firstName: String
+    lastName: String
+    profileMedium: String
+  }
+
+  # What CIGINT already holds for the signed-in user, read from our own
+  # database without asking Strava.
+  type Feed {
+    profile: Profile
+    # Stored activities, newest first. Only activities with a start location
+    # are stored, since those are the ones air quality can be looked up for.
+    # Activity.map is always null here: routes aren't stored.
+    activities: [Activity!]!
+    # When Strava was last asked for new activities; null before the first sync.
+    lastSyncedAt: String
+  }
+
   type Query {
     # The signed-in athlete.
     me: Athlete!
+
+    # The signed-in user's stored data. Prefer this to activities when the
+    # data is already stored: it costs no Strava rate limit.
+    feed: Feed!
 
     # A page of the athlete's activities, newest first. after and before are
     # Unix timestamps (seconds) bounding the activity's start time.

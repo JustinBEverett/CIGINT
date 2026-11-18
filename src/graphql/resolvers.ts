@@ -1,7 +1,15 @@
 import { cigarettesFor } from "@/src/lib/airquality/cigarettes";
 import { describeStravaError } from "@/src/lib/strava/error";
+import { getActivitiesForUser } from "@/src/prisma/activities";
+import { getAthleteProfile, getLastSyncedAt } from "@/src/prisma/users";
 import type { GraphQLContext } from "./context";
-import { toActivity, toAirQuality, toAthlete, type Activity } from "./mappers";
+import {
+  toActivity,
+  toAirQuality,
+  toAthlete,
+  toStoredActivity,
+  type Activity,
+} from "./mappers";
 
 interface ActivitiesArgs {
   after?: number | null;
@@ -14,6 +22,24 @@ export const resolvers = {
   Query: {
     me: async (_parent: unknown, _args: unknown, { strava }: GraphQLContext) =>
       toAthlete(await strava.athlete.get()),
+
+    // Everything here comes from our database, scoped to the session's user.
+    feed: async (
+      _parent: unknown,
+      _args: unknown,
+      { userId }: GraphQLContext,
+    ) => {
+      const [profile, activities, lastSyncedAt] = await Promise.all([
+        getAthleteProfile(userId),
+        getActivitiesForUser(userId),
+        getLastSyncedAt(userId),
+      ]);
+      return {
+        profile: profile ?? null,
+        activities: activities.map(toStoredActivity),
+        lastSyncedAt,
+      };
+    },
 
     activities: async (
       _parent: unknown,
