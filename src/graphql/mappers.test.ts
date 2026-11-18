@@ -1,6 +1,14 @@
 import type { SummaryActivity, SummaryAthlete } from "strava-v3";
 import { describe, expect, it } from "vitest";
-import { toActivity, toAthlete, toLatLng } from "./mappers";
+import type { ActivityRow } from "@/src/prisma/activities";
+import type { AirQualityRow } from "@/src/prisma/airquality";
+import {
+  toActivity,
+  toAirQuality,
+  toAthlete,
+  toLatLng,
+  toStoredActivity,
+} from "./mappers";
 
 // Only the fields the mapper reads; the rest of Strava's object is noise here.
 function stravaActivity(
@@ -109,6 +117,133 @@ describe("toActivity", () => {
         stravaActivity({ map: { id: "a1", polyline: "", summary_polyline: "" } }),
       ).map,
     ).toEqual({ summaryPolyline: null });
+  });
+});
+
+function storedReading(overrides: Record<string, unknown> = {}) {
+  return {
+    status: "final",
+    windowStart: "2026-11-01T12:00:00.000Z",
+    windowEnd: "2026-11-01T14:00:00.000Z",
+    pm25: 8.5,
+    no2: 4,
+    o3: 25,
+    aqhi: 3,
+    ...overrides,
+  } as unknown as AirQualityRow;
+}
+
+describe("toAirQuality", () => {
+  it("passes the reading through and names the status", () => {
+    expect(toAirQuality(storedReading())).toEqual({
+      status: "FINAL",
+      windowStart: "2026-11-01T12:00:00.000Z",
+      windowEnd: "2026-11-01T14:00:00.000Z",
+      pm25: 8.5,
+      no2: 4,
+      o3: 25,
+      aqhi: 3,
+      aqhiRisk: "LOW",
+    });
+  });
+
+  it("maps each stored status", () => {
+    expect(toAirQuality(storedReading({ status: "prelim" })).status).toBe(
+      "PRELIM",
+    );
+    expect(toAirQuality(storedReading({ status: "final" })).status).toBe(
+      "FINAL",
+    );
+  });
+
+  it("has no values for an unavailable reading", () => {
+    expect(
+      toAirQuality(
+        storedReading({
+          status: "unavailable",
+          windowStart: null,
+          windowEnd: null,
+          pm25: null,
+          no2: null,
+          o3: null,
+          aqhi: null,
+        }),
+      ),
+    ).toEqual({
+      status: "UNAVAILABLE",
+      windowStart: null,
+      windowEnd: null,
+      pm25: null,
+      no2: null,
+      o3: null,
+      aqhi: null,
+      aqhiRisk: null,
+    });
+  });
+
+  it("reads a status it doesn't know as unavailable", () => {
+    expect(toAirQuality(storedReading({ status: "mystery" })).status).toBe(
+      "UNAVAILABLE",
+    );
+  });
+
+  it("bands the risk on the AQHI as it is published (rounded)", () => {
+    const risk = (aqhi: number) => toAirQuality(storedReading({ aqhi })).aqhiRisk;
+
+    expect(risk(0.2)).toBe("LOW");
+    expect(risk(3.4)).toBe("LOW");
+    expect(risk(3.5)).toBe("MODERATE");
+    expect(risk(6.4)).toBe("MODERATE");
+    expect(risk(6.5)).toBe("HIGH");
+    expect(risk(10.4)).toBe("HIGH");
+    expect(risk(10.5)).toBe("VERY_HIGH");
+  });
+});
+
+describe("toStoredActivity", () => {
+  function row(overrides: Record<string, unknown> = {}) {
+    return {
+      id: "row-1",
+      stravaActivityId: "12345",
+      name: "Morning run",
+      type: "Run",
+      sportType: "TrailRun",
+      startDate: "2026-11-01T14:00:00.000Z",
+      movingTime: 1500,
+      elapsedTime: 1600,
+      distance: 5000,
+      startLat: 45.5,
+      startLng: -73.6,
+      averageHeartrate: 150,
+      maxHeartrate: null,
+      ...overrides,
+    } as unknown as ActivityRow;
+  }
+
+  it("uses Strava's id and has no route", () => {
+    expect(toStoredActivity(row())).toEqual({
+      id: "12345",
+      name: "Morning run",
+      type: "Run",
+      sportType: "TrailRun",
+      distance: 5000,
+      movingTime: 1500,
+      elapsedTime: 1600,
+      startDate: "2026-11-01T14:00:00.000Z",
+      startLocation: { lat: 45.5, lng: -73.6 },
+      map: null,
+      averageHeartrate: 150,
+      maxHeartrate: null,
+    });
+  });
+
+  it("nulls missing coordinates and sport type", () => {
+    const activity = toStoredActivity(
+      row({ startLat: null, startLng: null, sportType: null }),
+    );
+
+    expect(activity.startLocation).toBeNull();
+    expect(activity.sportType).toBeNull();
   });
 });
 
