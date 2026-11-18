@@ -3,6 +3,7 @@ import { GraphQLError } from "graphql";
 import type { NextRequest } from "next/server";
 import type { GraphQLContext } from "@/src/graphql/context";
 import { createServer } from "@/src/graphql/server";
+import { GridLoader } from "@/src/lib/airquality/rdaqa";
 import { getSession } from "@/src/lib/session";
 
 // getSession reads the session cookie, so the context is built per request
@@ -17,7 +18,11 @@ const handler = startServerAndCreateNextHandler<NextRequest, GraphQLContext>(
           extensions: { code: "UNAUTHENTICATED", http: { status: 401 } },
         });
       }
-      return { strava: session.client };
+      return {
+        strava: session.client,
+        userId: session.userId,
+        gridLoader: new GridLoader(),
+      };
     },
   },
 );

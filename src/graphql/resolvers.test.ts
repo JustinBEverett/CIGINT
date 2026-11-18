@@ -1,5 +1,7 @@
 import type { StravaClientInstance } from "strava-v3";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { GridLoader } from "@/src/lib/airquality/rdaqa";
+import type { UserId } from "@/src/prisma/users";
 import { createServer } from "./server";
 
 const listActivities = vi.fn();
@@ -17,7 +19,14 @@ const strava = {
 async function run(query: string, variables?: Record<string, unknown>) {
   const response = await createServer().executeOperation(
     { query, variables },
-    { contextValue: { strava } },
+    {
+      contextValue: {
+        strava,
+        userId: "user-1" as UserId,
+        // Nothing in the Strava-only resolvers touches the grid loader.
+        gridLoader: {} as GridLoader,
+      },
+    },
   );
   if (response.body.kind !== "single") throw new Error("expected one result");
   return response.body.singleResult;
