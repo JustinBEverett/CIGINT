@@ -14,6 +14,41 @@ export const typeDefs = /* GraphQL */ `
     summaryPolyline: String
   }
 
+  # Whether a reading is final, still preliminary (overwritten once ECCC
+  # publishes the final analysis), or could not be made (no GPS, or outside
+  # ECCC's coverage).
+  enum AirQualityStatus {
+    PRELIM
+    FINAL
+    UNAVAILABLE
+  }
+
+  # Health Canada's risk bands for the AQHI.
+  enum AqhiRisk {
+    LOW
+    MODERATE
+    HIGH
+    VERY_HIGH
+  }
+
+  # Air quality at an activity's start location, averaged over the 3 hours
+  # ending at its start hour (the window the AQHI is defined on). The
+  # pollutant fields are null when status is UNAVAILABLE.
+  type AirQuality {
+    status: AirQualityStatus!
+    windowStart: String
+    windowEnd: String
+    # Fine particulate matter, µg/m³.
+    pm25: Float
+    # Nitrogen dioxide and ozone, ppb.
+    no2: Float
+    o3: Float
+    # Air Quality Health Index, unrounded. Health Canada publishes it as a
+    # whole number from 1 up, shown as "10+" above 10.
+    aqhi: Float
+    aqhiRisk: AqhiRisk
+  }
+
   type Activity {
     # Strava's activity id. ID serialises as a string even though Strava's is
     # a number, so clients don't depend on the numeric form.
@@ -34,6 +69,13 @@ export const typeDefs = /* GraphQL */ `
     # Beats per minute. Null without a heart-rate monitor.
     averageHeartrate: Float
     maxHeartrate: Float
+
+    # Null when no reading exists yet or the lookup failed; a reading that
+    # was attempted but isn't possible has status UNAVAILABLE instead.
+    airQuality: AirQuality
+    # Cigarettes' worth of PM2.5 breathed during the activity. Null without
+    # a PM2.5 reading.
+    cigarettes: Float
   }
 
   type Athlete {
