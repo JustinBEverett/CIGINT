@@ -1,4 +1,6 @@
 import type { SummaryActivity, SummaryAthlete } from "strava-v3";
+import { aqhiRisk, type AqhiRisk } from "@/src/lib/airquality/aqhi";
+import type { AirQualityRow } from "@/src/prisma/airquality";
 
 // Pure conversions from Strava's REST objects to the shapes in schema.ts.
 // Kept free of imports from the DB or session code so they can be tested on
@@ -11,6 +13,12 @@ type StravaActivity = SummaryActivity & {
   average_heartrate?: number;
   max_heartrate?: number;
 };
+
+// The fields of a stored reading that reach the graph.
+type StoredAirQuality = Pick<
+  AirQualityRow,
+  "status" | "windowStart" | "windowEnd" | "pm25" | "no2" | "o3" | "aqhi"
+>;
 
 export interface LatLng {
   lat: number;
@@ -66,6 +74,48 @@ export function toActivity(activity: StravaActivity): Activity {
       : null,
     averageHeartrate: activity.average_heartrate ?? null,
     maxHeartrate: activity.max_heartrate ?? null,
+  };
+}
+
+export type AirQualityStatus = "PRELIM" | "FINAL" | "UNAVAILABLE";
+export type AqhiRiskLevel = "LOW" | "MODERATE" | "HIGH" | "VERY_HIGH";
+
+export interface AirQuality {
+  status: AirQualityStatus;
+  windowStart: string | null;
+  windowEnd: string | null;
+  pm25: number | null;
+  no2: number | null;
+  o3: number | null;
+  aqhi: number | null;
+  aqhiRisk: AqhiRiskLevel | null;
+}
+
+const STATUSES: Record<string, AirQualityStatus> = {
+  prelim: "PRELIM",
+  final: "FINAL",
+  unavailable: "UNAVAILABLE",
+};
+
+const RISKS: Record<AqhiRisk, AqhiRiskLevel> = {
+  Low: "LOW",
+  Moderate: "MODERATE",
+  High: "HIGH",
+  "Very high": "VERY_HIGH",
+};
+
+// The columns are plain text, so a value this doesn't know (none is written
+// today) reads as no reading rather than failing a non-null field.
+export function toAirQuality(reading: StoredAirQuality): AirQuality {
+  return {
+    status: STATUSES[reading.status] ?? "UNAVAILABLE",
+    windowStart: reading.windowStart,
+    windowEnd: reading.windowEnd,
+    pm25: reading.pm25,
+    no2: reading.no2,
+    o3: reading.o3,
+    aqhi: reading.aqhi,
+    aqhiRisk: reading.aqhi == null ? null : RISKS[aqhiRisk(reading.aqhi)],
   };
 }
 

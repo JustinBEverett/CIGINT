@@ -1,6 +1,7 @@
-import type { GraphQLContext } from "./context";
-import { toActivity, toAthlete } from "./mappers";
+import { cigarettesFor } from "@/src/lib/airquality/cigarettes";
 import { describeStravaError } from "@/src/lib/strava/error";
+import type { GraphQLContext } from "./context";
+import { toActivity, toAirQuality, toAthlete, type Activity } from "./mappers";
 
 interface ActivitiesArgs {
   after?: number | null;
@@ -42,6 +43,33 @@ export const resolvers = {
         if (describeStravaError(error).statusCode === 404) return null;
         throw error;
       }
+    },
+  },
+
+  // Fields resolved on top of the Strava data. `activity` is what the
+  // Query resolvers above returned. Both fields wait on the same loader key,
+  // so asking for both costs one lookup.
+  Activity: {
+    airQuality: async (
+      activity: Activity,
+      _args: unknown,
+      { loaders }: GraphQLContext,
+    ) => {
+      const reading = await loaders.airQuality.load(activity.id);
+      return reading && toAirQuality(reading);
+    },
+
+    cigarettes: async (
+      activity: Activity,
+      _args: unknown,
+      { loaders }: GraphQLContext,
+    ) => {
+      const reading = await loaders.airQuality.load(activity.id);
+      return cigarettesFor({
+        pm25: reading?.pm25 ?? null,
+        elapsedTime: activity.elapsedTime,
+        movingTime: activity.movingTime,
+      });
     },
   },
 };
