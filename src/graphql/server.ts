@@ -16,10 +16,22 @@ export function createServer() {
       if (original === error) return formattedError;
 
       // A failure inside a resolver may be a strava-v3 error, which embeds
-      // the Authorization header and sometimes the client secret. Log only
-      // the summary and send the client a message of ours.
+      // the Authorization header and sometimes the client secret, or a
+      // database error that can carry connection details. Log only the
+      // summary and send the client a message of ours.
       const summary = describeStravaError(original);
       console.error("GraphQL resolver failed", summary);
+
+      // Only an HTTP response from Strava carries a status code. Anything
+      // else (a database failure, a bug) isn't Strava's doing.
+      if (summary.statusCode === undefined) {
+        return {
+          message: "Internal server error",
+          locations: formattedError.locations,
+          path: formattedError.path,
+          extensions: { code: "INTERNAL_SERVER_ERROR" },
+        };
+      }
 
       return {
         message: "Request to Strava failed",
@@ -27,7 +39,7 @@ export function createServer() {
         path: formattedError.path,
         extensions: {
           code: "UPSTREAM_ERROR",
-          ...(summary.statusCode && { status: summary.statusCode }),
+          status: summary.statusCode,
         },
       };
     },
