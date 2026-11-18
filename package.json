@@ -28,6 +28,8 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@apollo/server": "^5.5.2",
+    "@as-integrations/next": "^4.1.0",
     "@azohra/meteo.grib": "^0.1.4",
     "@azohra/meteo.j2k": "^0.2.0",
     "@next/third-parties": "16.1.6",
@@ -35,6 +37,7 @@
     "@prisma/orm-postgres": "8.0.0-rc.8",
     "@tailwindcss/postcss": "^4.3.3",
     "@vercel/analytics": "^2.0.1",
+    "graphql": "^16.15.0",
     "next": "16.1.6",
     "postcss": "^8.5.28",
     "react": "19.2.3",
