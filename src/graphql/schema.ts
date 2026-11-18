@@ -121,7 +121,8 @@ export const typeDefs = /* GraphQL */ `
     # data is already stored: it costs no Strava rate limit.
     feed: Feed!
 
-    # A page of the athlete's activities, newest first. after and before are
+    # A page of the athlete's activities, newest first, except that Strava
+    # returns them oldest first whenever after is set. after and before are
     # Unix timestamps (seconds) bounding the activity's start time.
     activities(
       after: Int
